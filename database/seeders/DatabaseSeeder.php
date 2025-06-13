@@ -11,13 +11,35 @@ class DatabaseSeeder extends Seeder
     /**
      * Seed the application's database.
      */
-    public function run(): void
+    public function run()
     {
-        // User::factory(10)->create();
+        $this->call([
+            RoleSeeder::class,
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            SupervisorSeeder::class,
+            YearSeeder::class,
+            SemesterSeeder::class,
+            StageSeeder::class,
+            ClassroomSeeder::class,
+            SubjectSeeder::class,
+            SectionSeeder::class,
+            StudentSeeder::class,
+            TeacherSeeder::class,
+            EmployeeSeeder::class,
+            SectionSubjectSeeder::class,
+            QuizSeeder::class,
+            ExamGroupSeeder::class,
+            AttendanceTypeSeeder::class,
+            AttendanceSeeder::class,
+            NoteSeeder::class,
+            DictationSeeder::class,
+            FeeSeeder::class,
+            SalarySeeder::class,
+            PeriodSeeder::class,
+            SectionScheduleSeeder::class,
+            EventSeeder::class,
+            TeacherPopularitySeeder::class,
+            TeacherAvailabilitySeeder::class,
         ]);
     }
 }
