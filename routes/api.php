@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\Mobile\AuthController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Http\Controllers\Api\V1\Dashboard\AuthController as DashboardAuthController;
+use App\Http\Controllers\Api\V1\Dashboard\HomeController as DashboardHomeController;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
@@ -38,4 +39,8 @@ Route::group([
     Route::post('v1/dashboard/login', [DashboardAuthController::class, 'login'])
         ->name('dashboard.login');
 
+});
+
+Route::prefix('v1/dashboard')->group(function () {
+    Route::get('/home', [DashboardHomeController::class, 'index']);
 });
