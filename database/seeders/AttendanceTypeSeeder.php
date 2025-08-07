@@ -11,8 +11,8 @@ class AttendanceTypeSeeder extends Seeder
     {
 
         $types = [
-            ['name' => 'present', 'value' => 1],
-            ['name' => 'absent', 'value' => 0],
+            ['name' => 'present', 'value' => 10],
+            ['name' => 'absent', 'value' => -2],
             ['name' => 'late', 'value' => -1],
         ];
 

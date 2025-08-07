@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ExamAttempt extends Model
 {
-    protected $fillable = ['exam_id', 'student_id', 'result'];
+    protected $fillable = ['exam_id', 'student_id', 'teacher_id', 'result'];
 
     public function exam()
     {
@@ -16,5 +16,10 @@ class ExamAttempt extends Model
     public function student()
     {
         return $this->belongsTo(Student::class);
+    }
+
+    public function teacher()
+    {
+        return $this->belongsTo(Teacher::class);
     }
 }

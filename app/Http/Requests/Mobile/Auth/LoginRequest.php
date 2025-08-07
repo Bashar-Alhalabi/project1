@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Mobile;
+namespace App\Http\Requests\Mobile\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
@@ -28,7 +28,6 @@ class LoginRequest extends FormRequest
             'email.email' => __('mobile/auth.email_invalid'),
             'email.min' => __('mobile/auth.email_min'),
             'email.max' => __('mobile/auth.email_max'),
-
             'password.required' => __('mobile/auth.password_required'),
             'password.min' => __('mobile/auth.password_min'),
             'password.max' => __('mobile/auth.password_max'),

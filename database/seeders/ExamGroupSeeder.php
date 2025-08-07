@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Teacher;
 use Illuminate\Database\Seeder;
 use App\Models\ExamsGroup;
 use App\Models\Exam;
@@ -22,6 +23,7 @@ class ExamGroupSeeder extends Seeder
         $semesters = Semester::all();
         $students = Student::all()->pluck('id')->toArray();
 
+        $teachers = Teacher::all()->pluck('id')->toArray();
         // create 3 exam groups
         for ($g = 1; $g <= 3; $g++) {
             $group = ExamsGroup::create([
@@ -42,12 +44,13 @@ class ExamGroupSeeder extends Seeder
                 ]);
 
                 // for each exam: random 3 student attempts
-                $take = min(3, count($students));
+                $take = min(10, count($students));
                 $chosen = (array) array_rand($students, $take);
                 foreach ($chosen as $key) {
                     ExamAttempt::create([
                         'exam_id' => $exam->id,
                         'student_id' => $students[$key],
+                        'teacher_id' => 1,
                         'result' => rand(50, 100),
                     ]);
                 }

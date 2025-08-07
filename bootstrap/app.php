@@ -26,6 +26,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'localeSessionRedirect' => \Mcamara\LaravelLocalization\Middleware\LocaleSessionRedirect::class,
             'localeCookieRedirect' => \Mcamara\LaravelLocalization\Middleware\LocaleCookieRedirect::class,
             'localeViewPath' => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationViewPath::class,
+            'IsTeacher' => \App\Http\Middleware\IsTeacher::class,
+            'IsStudent' => \App\Http\Middleware\IsStudent::class,
         ]);
     })
 
