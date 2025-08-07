@@ -41,39 +41,6 @@ Route::get('/list-migrations', function () {
     return "<pre>" . ($output ?: "No migrations found") . "</pre>";
 });
 
-
-Route::get('/list-models', function () {
-    $migrations =[];
-    $migrationsPath = database_path('migrations');
-
-    $finder = new Finder();
-    $finder->in($migrationsPath)->files()->name('*.php');
-
-    foreach ($finder as $file) {
-        $content = $file->getContents();
-
-        // Find all schema creation blocks
-        preg_match_all('/Schema::create\(.*?}\);\n?/s', $content, $schemaMatches);
-        $schemas = $schemaMatches[0] ?? [];
-
-        if (!empty($schemas)) {
-            $migrations[] = [
-                'filename' => $file->getFilename(),
-                'schemas' => array_map('trim', $schemas)
-            ];
-        }
-    }
-
-    $output = '';
-    foreach ($migrations as $migration) {
-        $output .= "";
-        foreach ($migration['schemas'] as $schema) {
-            $output .= $schema . "\n";
-        }
-        // $output .= str_repeat('-', 40) . "\n";
-    }
-    return "<pre>" . ($output ?: "No migrations found") . "</pre>";
-});
 Route::get('/list-models', function () {
     $modelsContent = [];
     $modelsPath = app_path('Models');

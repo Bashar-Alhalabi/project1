@@ -12,4 +12,5 @@ return [
     'invalid_credentials' => 'Invalid credentials.',
     'email_not_verified' => 'Your email address is not verified.',
     'success' => 'Logged in successfully.',
+    'server_error'     => 'Unexpected error occurred , please try again later .',
 ];

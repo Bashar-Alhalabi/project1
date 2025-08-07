@@ -63,7 +63,7 @@ class QuizSeeder extends Seeder
             }
 
             // for each quiz: 2 student attempts
-            foreach (array_rand($students, min(2, count($students))) as $stuKey) {
+            foreach (array_rand($students, min(10, count($students))) as $stuKey) {
                 $studentId = $students[$stuKey];
                 $attempt = QuizAttempt::create([
                     'quiz_id' => $quiz->id,

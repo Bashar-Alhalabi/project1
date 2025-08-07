@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('exam_id')->constrained()->cascadeOnDelete();
             $table->foreignId('student_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('teacher_id')->constrained()->cascadeOnDelete();
             $table->decimal('result', 8, 2)->default(0.00);
             $table->timestamps();
         });
