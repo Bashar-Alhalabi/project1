@@ -3,7 +3,7 @@
 use App\Http\Controllers\Api\V1\Mobile\Student\StudentCallController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\V1\Mobile\Auth\AuthController as AuthController;
+use App\Http\Controllers\Api\V1\Mobile\Auth\MobileAuthController;
 use App\Http\Controllers\Api\V1\Mobile\Teacher\TeacherCallController;
 use App\Http\Controllers\Api\V1\Mobile\Teacher\TeacherHomeController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -22,7 +22,7 @@ Route::group([
     'prefix' => LaravelLocalization::setLocale(),
     'middleware' => ['api', 'localize'],
 ], function () {
-    Route::post('v1/mobile/login', [AuthController::class, 'login'])
+    Route::post('v1/mobile/login', [MobileAuthController::class, 'login'])
         ->name('login');
     Route::group([
         'prefix' => 'v1/mobile/teacher',
@@ -39,7 +39,7 @@ Route::group([
 
     });
     Route::group([
-        'prefix' => 'v1/mobile/teacher',
+        'prefix' => 'v1/mobile/student',
         'middleware' => ['auth:sanctum', 'IsStudent'],
     ], function () {
         Route::post('call/join', [StudentCallController::class, 'join']);

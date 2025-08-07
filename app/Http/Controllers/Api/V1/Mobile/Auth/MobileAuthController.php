@@ -9,7 +9,7 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
-class AuthController extends Controller
+class MobileAuthController extends Controller
 {
     public function login(LoginRequest $request): JsonResponse
     {
