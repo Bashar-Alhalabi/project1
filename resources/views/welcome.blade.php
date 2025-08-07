@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 
     <head>
         <meta charset="UTF-8">
@@ -9,7 +9,7 @@
     </head>
 
     <body>
-        <h1>HI THIS IS NGROK TEST</h1>
+        <h1>وط</h1>
     </body>
 
 </html>
