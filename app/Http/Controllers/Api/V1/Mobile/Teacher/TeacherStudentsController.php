@@ -14,7 +14,7 @@ class TeacherStudentsController extends Controller
     {
         try {
             $teacher = Auth::user()->teacher;
-            if (! $teacher) {
+            if (!$teacher) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Current user is not a teacher.',
@@ -25,32 +25,35 @@ class TeacherStudentsController extends Controller
             $result = [];
 
             foreach ($sections as $section) {
-                $className   = $section->classroom->name;
+                $className = $section->classroom->name;
                 $sectionName = $section->name;
                 $students = $section->students->map(fn($student) => [
-                    'id'         => $student->id,
+                    'id' => $student->id,
                     'first_name' => $student->user->first_name,
-                    'last_name'  => $student->user->last_name,
-                    'gender'     => $student->gender,
+                    'last_name' => $student->user->last_name,
+                    'gender' => $student->gender,
                 ]);
                 $subjects = $section
                     ->sectionSubjects
                     ->where('teacher_id', $teacher->id)
-                    ->map(fn($pivot) => [
-                        'id'   => $pivot->subject->id,
-                        'name' => $pivot->subject->name,
-                    ]);
+                    ->values()
+                    ->map(function ($pivot, $index) {
+                        return [
+                            'id' => $pivot->subject->id,
+                            'name' => $pivot->subject->name,
+                        ];
+                    });
                 $result[$className][$sectionName]['subjects'] = $subjects;
                 $result[$className][$sectionName]['students'] = $students;
             }
             return response()->json([
                 'success' => true,
-                'data'    => $result,
+                'data' => $result,
             ]);
         } catch (\Throwable $e) {
             Log::error('Error fetching teacher students', [
                 'teacher_id' => Auth::id(),
-                'error'      => $e->getMessage(),
+                'error' => $e->getMessage(),
             ]);
             return response()->json([
                 'success' => false,
