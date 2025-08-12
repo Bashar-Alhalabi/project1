@@ -4,17 +4,13 @@ namespace App\Http\Requests\Mobile\Teacher;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Support\Carbon;
-use App\Models\SectionSubject;
-use App\Models\Call;
+use Illuminate\Validation\ValidationException;
 
-class CreateCallRequest extends FormRequest
+class ScheduleCallRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        // Route middleware IsTeacher should guard this, but keep true here.
+        // route middleware IsTeacher guards this
         return true;
     }
 
@@ -23,33 +19,31 @@ class CreateCallRequest extends FormRequest
         return [
             'section_id' => ['required', 'integer', 'exists:sections,id'],
             'subject_id' => ['required', 'integer', 'exists:subjects,id'],
-            'started_at' => ['required', 'date'],
+            'scheduled_at' => ['required', 'date', 'after:now'],
+            'duration_minutes' => ['nullable', 'integer', 'min:30', 'max:720'],
             'channel_name' => ['nullable', 'string', 'max:191'],
         ];
     }
 
-
-    /**
-     * Localized messages for basic rules.
-     */
     public function messages(): array
     {
         return [
-            // section
             'section_id.required' => __('mobile/call.validation.section_required'),
             'section_id.integer' => __('mobile/call.validation.section_integer'),
             'section_id.exists' => __('mobile/call.validation.section_exists'),
 
-            // subject
             'subject_id.required' => __('mobile/call.validation.subject_required'),
             'subject_id.integer' => __('mobile/call.validation.subject_integer'),
             'subject_id.exists' => __('mobile/call.validation.subject_exists'),
 
-            // started_at
-            'started_at.required' => __('mobile/call.validation.started_required'),
-            'started_at.date' => __('mobile/call.validation.started_date'),
+            'scheduled_at.required' => __('mobile/call.validation.scheduled_required'),
+            'scheduled_at.date' => __('mobile/call.validation.scheduled_date'),
+            'scheduled_at.after' => __('mobile/call.validation.scheduled_after_now'),
 
-            // channel name
+            'duration_minutes.integer' => __('mobile/call.validation.duration_integer'),
+            'duration_minutes.min' => __('mobile/call.validation.duration_min'),
+            'duration_minutes.max' => __('mobile/call.validation.duration_max'),
+
             'channel_name.string' => __('mobile/call.validation.channel_string'),
             'channel_name.max' => __('mobile/call.validation.channel_max'),
         ];

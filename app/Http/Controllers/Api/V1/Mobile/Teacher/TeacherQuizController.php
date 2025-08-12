@@ -8,7 +8,7 @@ use App\Models\Quiz;
 use App\Models\QuizQuestion;
 use App\Models\QuizQuestionAnswer;
 use App\Models\SectionSubject;
-use Illuminate\Http\Request;
+use App\Models\Semester;
 use Illuminate\Support\Facades\DB;
 
 class TeacherQuizController extends Controller
@@ -19,7 +19,7 @@ class TeacherQuizController extends Controller
         $teacher = $user->teacher;
         if (!$teacher) {
             return response()->json([
-                'message' => __('mobile.quiz.errors.not_teacher')
+                'message' => __('mobile/quiz.errors.not_teacher')
             ], 403);
         }
 
@@ -33,7 +33,7 @@ class TeacherQuizController extends Controller
 
         if (!$sectionSubjectExists) {
             return response()->json([
-                'message' => __('mobile.quiz.errors.teacher_not_assigned')
+                'message' => __('mobile/quiz.errors.teacher_not_assigned')
             ], 403);
         }
 
@@ -46,7 +46,7 @@ class TeacherQuizController extends Controller
 
             if (!isset($q['answers']) || !is_array($q['answers']) || count($q['answers']) < 2) {
                 return response()->json([
-                    'message' => __('mobile.quiz.errors.min_answers_per_question'),
+                    'message' => __('mobile/quiz.errors.min_answers_per_question'),
                     'question_index' => $qIndex,
                 ], 422);
             }
@@ -55,7 +55,7 @@ class TeacherQuizController extends Controller
             foreach ($q['answers'] as $a) {
                 if (!array_key_exists('is_correct', $a)) {
                     return response()->json([
-                        'message' => __('mobile.quiz.errors.answer_correct_flag'),
+                        'message' => __('mobile/quiz.errors.answer_correct_flag'),
                         'question_index' => $qIndex,
                     ], 422);
                 }
@@ -65,7 +65,7 @@ class TeacherQuizController extends Controller
 
             if ($correctCount !== 1) {
                 return response()->json([
-                    'message' => __('mobile.quiz.errors.one_correct_answer'),
+                    'message' => __('mobile/quiz.errors.one_correct_answer'),
                     'question_index' => $qIndex,
                     'correct_count' => $correctCount
                 ], 422);
@@ -74,21 +74,23 @@ class TeacherQuizController extends Controller
 
         if ($totalMark > 20) {
             return response()->json([
-                'message' => __('mobile.quiz.errors.total_mark_exceeded'),
+                'message' => __('mobile/quiz.errors.total_mark_exceeded'),
                 'total' => $totalMark
             ], 422);
         }
 
         DB::beginTransaction();
         try {
+            $semester = Semester::where('is_active', true)->firstOrFail();
             $quiz = Quiz::create([
                 'teacher_id' => $teacher->id,
                 'subject_id' => $data['subject_id'],
                 'classroom_id' => $data['classroom_id'],
                 'section_id' => $data['section_id'],
+                'semester_id' => $semester->id,
                 'start_time' => $data['start_time'],
                 'end_time' => $data['end_time'],
-                'name' => $data['name'],   // <-- use name (matches your migrations)
+                'name' => $data['name'],
             ]);
 
             foreach ($questions as $q) {
@@ -101,23 +103,21 @@ class TeacherQuizController extends Controller
                 foreach ($q['answers'] as $a) {
                     QuizQuestionAnswer::create([
                         'quiz_question_id' => $qq->id,
-                        'answer' => $a['answer'],
-                        'is_correct' => (bool) $a['is_correct'],
+                        'text' => $a['answer'],
+                        'correct' => (bool) $a['is_correct'],
                     ]);
                 }
             }
-
             DB::commit();
-
             return response()->json([
-                'message' => __('mobile.quiz.created'),
+                'message' => __('mobile/quiz.created'),
                 'quiz_id' => $quiz->id,
             ], 201);
 
         } catch (\Throwable $e) {
             DB::rollBack();
             return response()->json([
-                'message' => __('mobile.quiz.errors.save_failed'),
+                'message' => __('mobile/quiz.errors.save_failed'),
                 'error' => $e->getMessage(),
             ], 500);
         }

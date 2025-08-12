@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\Mobile\Student\StudentCallController;
+use App\Http\Controllers\Api\V1\Mobile\Teacher\TeacherQuizController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\Mobile\Auth\MobileAuthController;
@@ -30,10 +31,12 @@ Route::group([
         Route::get('home', [TeacherHomeController::class, 'index']);
         Route::get('students', [TeacherStudentsController::class, 'index']);
         Route::get('weekly-schedule', [TeacherScheduleController::class, 'weekly']);
-        Route::post('call', [TeacherCallController::class, 'store']);
+        Route::post('call/schedule', [TeacherCallController::class, 'schedule']);
+        Route::post('scheduled-call/{scheduled_call}/start', [TeacherCallController::class, 'startScheduled']);
         Route::post('call/{call}/end', [TeacherCallController::class, 'end']);
         Route::post('notes/create', [TeacherNoteController::class, 'store']);
         Route::post('dictations/create', [TeacherDictationController::class, 'store']);
+        Route::post('quiz/create', [TeacherQuizController::class, 'store']);
     });
     Route::group([
         'prefix' => 'v1/mobile/student',

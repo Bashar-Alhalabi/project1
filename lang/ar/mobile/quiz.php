@@ -39,7 +39,8 @@ return [
         // question text
         'question_required' => 'نص السؤال مطلوب.',
         'question_string' => 'نص السؤال يجب أن يكون نصاً.',
-
+        'question_min' => 'نص السؤال يجب أن لا يقل عن :min حرفاً.',
+        'question_max' => 'نص السؤال يجب أن لا يزيد على :max حرفاً.',
         // question mark
         'question_mark_required' => 'الدرجة الخاصة بالسؤال مطلوبة.',
         'question_mark_numeric' => 'درجة السؤال يجب أن تكون رقماً.',
@@ -53,6 +54,8 @@ return [
         // answer text
         'answer_required' => 'نص الإجابة مطلوب.',
         'answer_string' => 'نص الإجابة يجب أن يكون نصاً.',
+        'answer_min' => 'نص الإجابة يجب أن لا يقل عن :min أحرف.',
+        'answer_max' => 'نص الإجابة يجب أن لا يزيد على :max أحرف.',
 
         // is_correct flag
         'is_correct_required' => 'يجب تحديد حقل is_correct لكل إجابة (true/false).',

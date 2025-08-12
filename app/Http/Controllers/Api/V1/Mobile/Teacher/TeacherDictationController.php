@@ -9,6 +9,8 @@ use App\Models\Dictation;
 use App\Models\Semester;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
+use App\Models\Student;
+use App\Models\SectionSubject;
 
 class TeacherDictationController extends Controller
 {
@@ -16,14 +18,19 @@ class TeacherDictationController extends Controller
     {
         try {
             $teacher = $request->user()->teacher;
-            $student = $request->user()->teacher->section->students()
-                ->where('id', $request->student_id)
-                ->firstOrFail();
-
-            // determine current semester
-            $semester = Semester::whereDate('start_date', '<=', today())
-                ->whereDate('end_date', '>=', today())
-                ->firstOrFail();
+            $semester = Semester::where('is_active', true)->firstOrFail();
+            $student = Student::find($request->student_id);
+            $sectionId = $student->section_id;
+            $teaches = SectionSubject::where('section_id', $sectionId)
+                ->where('subject_id', $request->subject_id)
+                ->where('teacher_id', $teacher->id)
+                ->exists();
+            if (!$teaches) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('mobile/dictation.errors.teacher_not_assigned'),
+                ], 403);
+            }
             $dictation = Dictation::create([
                 'student_id' => $student->id,
                 'subject_id' => $request->subject_id,
@@ -34,7 +41,7 @@ class TeacherDictationController extends Controller
             ]);
             return response()->json([
                 'success' => true,
-                'message' => __('mobile.dictation.store.success'),
+                'message' => __('mobile/dictation.store.success'),
                 'data' => $dictation,
             ], 201);
         } catch (\Throwable $e) {
@@ -45,7 +52,7 @@ class TeacherDictationController extends Controller
             ]);
             return response()->json([
                 'success' => false,
-                'message' => __('mobile.dictation.store.error'),
+                'message' => __('mobile/dictation.store.error'),
             ], 500);
         }
     }

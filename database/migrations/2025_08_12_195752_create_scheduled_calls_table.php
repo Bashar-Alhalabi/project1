@@ -10,15 +10,19 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('calls', function (Blueprint $table) {
+        Schema::create('scheduled_calls', function (Blueprint $table) {
             $table->id();
-            $table->string('channel_name', 191)->index();
             $table->foreignId('created_by')->constrained('teachers')->cascadeOnDelete();
             $table->foreignId('section_id')->constrained()->cascadeOnDelete();
             $table->foreignId('subject_id')->constrained()->cascadeOnDelete();
-            $table->timestamp('started_at')->nullable();
-            $table->timestamp('ended_at')->nullable();
+            $table->string('channel_name', 191)->nullable()->index();
+            $table->timestamp('scheduled_at');
+            $table->unsignedSmallInteger('duration_minutes')->default(30);
+            $table->enum('status', ['scheduled', 'cancelled', 'started', 'completed'])->default('scheduled');
+            $table->foreignId('call_id')->nullable()->constrained('calls')->nullOnDelete();
             $table->timestamps();
+            $table->index(['created_by', 'scheduled_at']);
+            $table->index(['section_id', 'scheduled_at']);
         });
     }
 
@@ -27,6 +31,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('calls');
+        Schema::dropIfExists('scheduled_calls');
     }
 };

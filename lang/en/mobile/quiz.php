@@ -39,6 +39,8 @@ return [
         // question text
         'question_required' => 'Question text is required.',
         'question_string' => 'Question text must be a string.',
+        'question_min' => 'Question text must`nt be less than :min char .',
+        'question_max' => 'Question text must`nt be more than :max char .',
 
         // question mark
         'question_mark_required' => 'Question mark is required.',
@@ -53,6 +55,8 @@ return [
         // answer text
         'answer_required' => 'Answer text is required.',
         'answer_string' => 'Answer text must be a string.',
+        'answer_min' => 'Answer text must`nt be less than :min char .',
+        'answe_max' => 'Answer text must`nt be more than :max char .',
 
         // is_correct flag
         'is_correct_required' => 'Each answer must include the is_correct flag (true/false).',

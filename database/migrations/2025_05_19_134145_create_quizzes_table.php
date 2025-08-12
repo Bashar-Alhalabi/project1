@@ -18,14 +18,9 @@ return new class extends Migration {
             $table->foreignId('classroom_id')->constrained('classrooms')->cascadeOnDelete();
             $table->foreignId('section_id')->nullable()->constrained('sections')->cascadeOnDelete();
             $table->foreignId('teacher_id')->constrained('teachers')->cascadeOnDelete();
-
-            // start / end time for the quiz
             $table->dateTime('start_time')->nullable();
             $table->dateTime('end_time')->nullable();
-
             $table->timestamps();
-
-            // indexes for common queries
             $table->index(['subject_id', 'classroom_id', 'section_id']);
         });
     }
