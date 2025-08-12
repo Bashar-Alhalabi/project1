@@ -49,10 +49,6 @@ class Student extends Model
     {
         return $this->hasMany(Dictation::class);
     }
-    public function feeInvoices()
-    {
-        return $this->hasMany(FeeInvoice::class);
-    }
     public function notes()
     {
         return $this->hasMany(Note::class);
@@ -61,38 +57,10 @@ class Student extends Model
     {
         return $this->hasMany(ExamAttempt::class);
     }
-
-    /**
-     * All receipts (payments) from this student.
-     */
-    public function receipts()
+    public function quizAttempts()
     {
-        return $this->hasMany(StudentReceipt::class);
+        return $this->hasMany(\App\Models\QuizAttempt::class);
     }
-
-    public function processingFees()
-    {
-        return $this->hasMany(ProcessingFee::class);
-    }
-    public function paymentsToStudent()
-    {
-        return $this->hasMany(PaymentToStudent::class);
-    }
-
-    /** All discount records for this student. */
-    public function studentDiscounts()
-    {
-        return $this->hasMany(StudentDiscount::class);
-    }
-
-    /** All accounting entries for this student. */
-    public function studentAccounts()
-    {
-        return $this->hasMany(StudentAccount::class);
-    }
-
-
-
     public function attendances()
     {
         return $this->morphMany(Attendance::class, 'attendable');
@@ -108,39 +76,59 @@ class Student extends Model
     public function calculatePoints(string $type = 'all', int $teacherId = null): float
     {
         $total = 0.00;
+
+        // EXAMS: exam_attempts now contains teacher_id and result directly
         if ($type === 'all' || $type === 'exams') {
             $q = $this->hasMany(\App\Models\ExamAttempt::class);
+
+            // previously we used whereHas('exam', ...) — now exam_attempts has teacher_id
             if ($teacherId) {
-                $q = $q->whereHas('exam', fn($exam) => $exam->where('teacher_id', $teacherId));
+                $q = $q->where('teacher_id', $teacherId);
             }
+
             $total += (float) $q->sum('result');
         }
+
+        // QUIZ: remain using quiz attempts; filter by quiz.teacher_id if needed
         if ($type === 'all' || $type === 'quiz') {
             $q = $this->hasMany(\App\Models\QuizAttempt::class);
+
             if ($teacherId) {
-                $query = $q->whereHas('quiz', function ($qu) use ($teacherId) {
+                $q = $q->whereHas('quiz', function ($qu) use ($teacherId) {
                     $qu->where('teacher_id', $teacherId);
                 });
             }
+
             $total += (float) $q->sum('total_score');
         }
+
+        // NOTES
         if ($type === 'all' || $type === 'notes') {
             $notes = $this->hasMany(\App\Models\Note::class)
                 ->when($teacherId, fn($q) => $q->where('by_id', $teacherId))
                 ->get();
+
             foreach ($notes as $note) {
                 $total += (float) $note->value;
             }
         }
+
+        // ATTENDANCES
         if ($type === 'all' || $type === 'attendances') {
             $query = $this->attendances()
                 ->when($teacherId, fn($q) => $q->where('by_id', $teacherId));
+
             $attendances = $query->with('attendanceType')->get();
             foreach ($attendances as $attendance) {
-                $total += (float) $attendance->attendanceType->value;
+                // guard if attendanceType missing
+                if ($attendance->attendanceType) {
+                    $total += (float) $attendance->attendanceType->value;
+                }
             }
         }
+
         return $total;
     }
+
 
 }

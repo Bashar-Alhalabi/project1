@@ -54,28 +54,22 @@ class Section extends Model
 
     public function averageExamResultForTeacher(int $teacherId, array $subjectIds): float
     {
-        // 1) All exam IDs for those subjects in this section’s classroom
-        $examIds = Exam::query()
-            ->whereIn('subject_id', $subjectIds)
-            ->where('classroom_id', $this->classroom_id)
-            ->pluck('id');
-
-        if ($examIds->isEmpty()) {
-            return 0.0;
-        }
-
-        // 2) All student IDs in this section
+        // 1) All student IDs in this section
         $studentIds = $this->students()->pluck('id');
-
         if ($studentIds->isEmpty()) {
             return 0.0;
         }
-
-        // 3) Compute the average of only those attempts:
-        return (float) ExamAttempt::query()
-            ->whereIn('exam_id', $examIds)
-            ->whereIn('student_id', $studentIds)
+        // 2) Compute the average from exam_attempts for:
+        //    - the requested subject(s)
+        //    - this section (we now store section_id on exam_attempts)
+        //    - the given teacher
+        //    - only the students of this section
+        $avg = ExamAttempt::query()
+            ->whereIn('subject_id', $subjectIds)
+            ->where('section_id', $this->id)
             ->where('teacher_id', $teacherId)
+            ->whereIn('student_id', $studentIds)
             ->avg('result');
+        return $avg === null ? 0.0 : (float) $avg;
     }
 }

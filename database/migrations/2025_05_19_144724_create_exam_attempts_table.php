@@ -12,10 +12,14 @@ return new class extends Migration {
     {
         Schema::create('exam_attempts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('exam_id')->constrained()->cascadeOnDelete();
             $table->foreignId('student_id')->constrained()->cascadeOnDelete();
             $table->foreignId('teacher_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('subject_id')->constrained('subjects')->cascadeOnDelete();
+            $table->foreignId('semester_id')->constrained('semesters')->cascadeOnDelete();
+            $table->foreignId('section_id')->constrained('sections')->cascadeOnDelete();
+            $table->decimal('max_result', 8, 2)->default(0);
             $table->decimal('result', 8, 2)->default(0.00);
+            $table->enum('status', ['approved', 'wait'])->default('wait');
             $table->timestamps();
         });
     }

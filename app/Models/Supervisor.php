@@ -11,26 +11,4 @@ class Supervisor extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-
-    public function salaryPayouts()
-    {
-        return $this->morphMany(SalaryPayout::class, 'payee');
-    }
-
-    public function salaryAdjustments()
-    {
-        return $this->morphMany(SalaryAdjustment::class, 'payee');
-    }
-
-    public function salaryReceipts()
-    {
-        return $this->morphMany(SalaryReceipt::class, 'payee');
-    }
-
-    public function salaryAccounts()
-    {
-        return $this->morphMany(SalaryAccount::class, 'payee');
-    }
-
 }

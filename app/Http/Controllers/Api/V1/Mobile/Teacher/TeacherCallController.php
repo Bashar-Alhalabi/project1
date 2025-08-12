@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Mobile\Teacher;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CreateCallRequest;
+use App\Http\Requests\Mobile\Teacher\CreateCallRequest;
 use App\Models\Call;
 use App\Services\Mobile\ZegoService;
 use Illuminate\Support\Facades\DB;
@@ -27,29 +27,29 @@ class TeacherCallController extends Controller
                 $channelName = $request->input('channel_name') ?? $this->zego->generateChannelName();
                 $call = Call::create([
                     'channel_name' => $channelName,
-                    'created_by'   => $teacher->id,
-                    'started_at'   => now(),
+                    'created_by' => $teacher->id,
+                    'started_at' => now(),
                 ]);
                 $call->participants()->create([
-                    'user_id'   => auth()->id(),
+                    'user_id' => auth()->id(),
                     'joined_at' => now(),
                 ]);
                 $token = $this->zego->generateToken(auth()->id());
                 return response()->json([
-                    'status'  => true,
+                    'status' => true,
                     'message' => __('messages.call_created_successfully'),
-                    'data'    => [
-                        'call_id'      => $call->id,
+                    'data' => [
+                        'call_id' => $call->id,
                         'channel_name' => $call->channel_name,
-                        'token'        => $token,
+                        'token' => $token,
                     ],
                 ], 201);
             });
         } catch (\Throwable $e) {
             return response()->json([
-                'status'  => false,
+                'status' => false,
                 'message' => __('messages.unexpected_error'),
-                'error'   => $e->getMessage(),
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -61,18 +61,18 @@ class TeacherCallController extends Controller
     {
         try {
             $call = Call::where('id', $callId)
-                        ->whereNull('ended_at')
-                        ->firstOrFail();
+                ->whereNull('ended_at')
+                ->firstOrFail();
             $call->update([
                 'ended_at' => now(),
             ]);
             return response()->json([
-                'status'  => true,
+                'status' => true,
                 'message' => __('messages.call_ended_successfully'),
             ]);
         } catch (\Throwable $e) {
             return response()->json([
-                'status'  => false,
+                'status' => false,
                 'message' => __('messages.unexpected_error'),
             ], 500);
         }

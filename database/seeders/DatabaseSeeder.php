@@ -33,8 +33,6 @@ class DatabaseSeeder extends Seeder
             AttendanceSeeder::class,
             NoteSeeder::class,
             DictationSeeder::class,
-            FeeSeeder::class,
-            SalarySeeder::class,
             PeriodSeeder::class,
             SectionScheduleSeeder::class,
             EventSeeder::class,

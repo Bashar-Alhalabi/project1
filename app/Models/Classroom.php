@@ -25,13 +25,4 @@ class Classroom extends Model
     {
         return $this->hasMany(Section::class);
     }
-    public function studentAccounts()
-    {
-        return $this->hasMany(StudentAccount::class);
-    }
-
-    public function fees()
-    {
-        return $this->hasMany(Fee::class);
-    }
 }

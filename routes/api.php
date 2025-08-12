@@ -12,7 +12,6 @@ use App\Http\Controllers\Api\V1\Dashboard\HomeController as DashboardHomeControl
 use App\Http\Controllers\Api\V1\Mobile\Teacher\TeacherStudentsController;
 use App\Http\Controllers\Api\V1\Mobile\Teacher\TeacherScheduleController;
 use App\Http\Controllers\Api\V1\Mobile\Teacher\TeacherNoteController;
-use App\Http\Controllers\Api\V1\Mobile\Teacher\TeacherFinanceController;
 use App\Http\Controllers\Api\V1\Mobile\Teacher\TeacherDictationController;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
@@ -35,8 +34,6 @@ Route::group([
         Route::post('call/{call}/end', [TeacherCallController::class, 'end']);
         Route::post('notes/create', [TeacherNoteController::class, 'store']);
         Route::post('dictations/create', [TeacherDictationController::class, 'store']);
-        Route::get('money-info', [TeacherFinanceController::class, 'moneyInfo']);
-
     });
     Route::group([
         'prefix' => 'v1/mobile/student',

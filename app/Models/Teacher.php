@@ -28,28 +28,6 @@ class Teacher extends Model
             'subject_id'
         );
     }
-
-    public function salaryPayouts()
-    {
-        return $this->morphMany(SalaryPayout::class, 'payee');
-    }
-
-    public function salaryAdjustments()
-    {
-        return $this->morphMany(SalaryAdjustment::class, 'payee');
-    }
-
-    public function salaryReceipts()
-    {
-        return $this->morphMany(SalaryReceipt::class, 'payee');
-    }
-
-    public function salaryAccounts()
-    {
-        return $this->morphMany(SalaryAccount::class, 'payee');
-    }
-
-
     /**
      * Get all Sections this teacher actually teaches (unique).
      *
