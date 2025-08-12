@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1\Mobile\Teacher;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Mobile\Teacher\CreateNoteRequest;
 use App\Models\Note;
+use App\Models\Semester;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -15,16 +16,18 @@ class TeacherNoteController extends Controller
     {
         try {
             $teacherUserId = Auth::id();
+            $semester = Semester::where('is_active', true)->firstOrFail();
             $note = Note::create([
                 'student_id' => $request->student_id,
-                'by_id'      => $teacherUserId,
-                'type'       => $request->type,
-                'reason'     => $request->reason,
+                'semester_id' => $semester->id,
+                'by_id' => $teacherUserId,
+                'type' => $request->type,
+                'reason' => $request->reason,
             ]);
             return response()->json([
                 'success' => true,
                 'message' => __('mobile/notes.created'),
-                'note'    => $note,
+                'note' => $note,
             ], 201);
         } catch (Exception $e) {
             Log::error('Error in teacher note request', [

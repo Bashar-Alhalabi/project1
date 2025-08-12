@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->string('channel_name', 191)->index();
             $table->foreignId('created_by')->constrained('teachers')->cascadeOnDelete();
             $table->foreignId('section_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('subjuect_id')->constrained()->cascadeOnDelete();
             $table->timestamp('started_at')->nullable();
             $table->timestamp('ended_at')->nullable();
             $table->timestamps();
