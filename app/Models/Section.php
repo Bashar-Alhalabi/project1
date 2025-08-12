@@ -25,6 +25,10 @@ class Section extends Model
     {
         return $this->hasMany(SectionSchedule::class);
     }
+    public function calls()
+    {
+        return $this->hasMany(Call::class);
+    }
 
 
     /**

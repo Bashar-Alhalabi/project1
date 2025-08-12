@@ -13,6 +13,7 @@ class Call extends Model
         'created_by',
         'started_at',
         'ended_at',
+        'section_id'
     ];
 
     protected $dates = ['started_at', 'ended_at'];
@@ -22,6 +23,10 @@ class Call extends Model
         return $this->belongsTo(Teacher::class, 'created_by');
     }
 
+    public function section(): BelongsTo
+    {
+        return $this->belongsTo(Section::class);
+    }
     public function participants(): HasMany
     {
         return $this->hasMany(CallParticipant::class);
