@@ -35,19 +35,37 @@ class AuthController extends Controller
      
         return response()->json([
                 'message' => __('dashboard/auth.email_not_verified'),
-            ], 401);
-    
+            ], 401);    
        }
+      public function logout(Request $request)
+{
+    try {
+        $user = $request->user();
+        
+        if (!$user) {
+            return response()->json([
+                'message' => 'Unauthenticated',
+                'success' => false
+            ], 401);
+        }
 
-    public function logout(Request $request)
-    {
-        $request->user()->currentAccessToken()->delete();
-
+        $user->tokens()->delete();
+        
         return response()->json([
-            'message' => 'Successfully logged out'
-        ],200);
+            'message' => __('dashboard/auth.logout_success'),
+            'success' => true
+        ]);
+        
+    } catch (\Exception $e) {
+        Log::error('Logout error: ' . $e->getMessage());
+        return response()->json([
+            'message' => __('dashboard/auth.logout_error'),
+            'success' => false,
+            'error' => config('app.debug') ? $e->getMessage() : null
+        ], 500);
     }
-
+} 
+       
     public function sendPasswordResetLink(Request $request)
     {
         $request->validate([

@@ -11,7 +11,7 @@ return [
 
     'invalid_credentials' => 'Invalid credentials.',
     'email_not_verified' => 'Your email address is not verified.',
-    'success' => 'Logged in successfully.',
+    'logout_success' => 'Logged out successfully.',
 ];
 
 
