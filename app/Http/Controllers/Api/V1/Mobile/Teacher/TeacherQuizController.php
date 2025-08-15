@@ -22,35 +22,27 @@ class TeacherQuizController extends Controller
                 'message' => __('mobile/quiz.errors.not_teacher')
             ], 403);
         }
-
         $data = $request->validated();
-
-        // Ensure teacher teaches this subject in this section
         $sectionSubjectExists = SectionSubject::where('section_id', $data['section_id'])
             ->where('subject_id', $data['subject_id'])
             ->where('teacher_id', $teacher->id)
             ->exists();
-
         if (!$sectionSubjectExists) {
             return response()->json([
                 'message' => __('mobile/quiz.errors.teacher_not_assigned')
             ], 403);
         }
-
-        // Validate total marks ≤ 20 and exactly one correct answer per question
         $questions = $data['questions'];
         $totalMark = 0;
         foreach ($questions as $qIndex => $q) {
             $qMark = isset($q['mark']) ? floatval($q['mark']) : 0;
             $totalMark += $qMark;
-
             if (!isset($q['answers']) || !is_array($q['answers']) || count($q['answers']) < 2) {
                 return response()->json([
                     'message' => __('mobile/quiz.errors.min_answers_per_question'),
                     'question_index' => $qIndex,
                 ], 422);
             }
-
             $correctCount = 0;
             foreach ($q['answers'] as $a) {
                 if (!array_key_exists('is_correct', $a)) {
@@ -62,7 +54,6 @@ class TeacherQuizController extends Controller
                 if ($a['is_correct'])
                     $correctCount++;
             }
-
             if ($correctCount !== 1) {
                 return response()->json([
                     'message' => __('mobile/quiz.errors.one_correct_answer'),
@@ -71,14 +62,12 @@ class TeacherQuizController extends Controller
                 ], 422);
             }
         }
-
         if ($totalMark > 20) {
             return response()->json([
                 'message' => __('mobile/quiz.errors.total_mark_exceeded'),
                 'total' => $totalMark
             ], 422);
         }
-
         DB::beginTransaction();
         try {
             $semester = Semester::where('is_active', true)->firstOrFail();
@@ -92,14 +81,12 @@ class TeacherQuizController extends Controller
                 'end_time' => $data['end_time'],
                 'name' => $data['name'],
             ]);
-
             foreach ($questions as $q) {
                 $qq = QuizQuestion::create([
                     'quiz_id' => $quiz->id,
                     'text' => $q['question'],
                     'mark' => $q['mark'],
                 ]);
-
                 foreach ($q['answers'] as $a) {
                     QuizQuestionAnswer::create([
                         'quiz_question_id' => $qq->id,
@@ -113,7 +100,6 @@ class TeacherQuizController extends Controller
                 'message' => __('mobile/quiz.created'),
                 'quiz_id' => $quiz->id,
             ], 201);
-
         } catch (\Throwable $e) {
             DB::rollBack();
             return response()->json([

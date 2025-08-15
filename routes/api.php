@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\Mobile\Student\StudentCallController;
+use App\Http\Controllers\Api\V1\Mobile\Teacher\TeacherExamAttemptController;
 use App\Http\Controllers\Api\V1\Mobile\Teacher\TeacherQuizController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -37,6 +38,8 @@ Route::group([
         Route::post('notes/create', [TeacherNoteController::class, 'store']);
         Route::post('dictations/create', [TeacherDictationController::class, 'store']);
         Route::post('quiz/create', [TeacherQuizController::class, 'store']);
+        Route::get('exams/enterable', [TeacherExamAttemptController::class, 'enterable']);
+        Route::post('exams/{exam}/results', [TeacherExamAttemptController::class, 'submitResults']);
     });
     Route::group([
         'prefix' => 'v1/mobile/student',

@@ -14,10 +14,6 @@ class ExamAttempt extends Model
     protected $fillable = [
         'student_id',
         'teacher_id',
-        'subject_id',
-        'semester_id',
-        'section_id',
-        'max_result',
         'result',
         'status',
     ];
