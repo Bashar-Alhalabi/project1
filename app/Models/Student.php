@@ -77,11 +77,10 @@ class Student extends Model
     {
         $total = 0.00;
 
-        // EXAMS: exam_attempts now contains teacher_id and result directly
+        // EXAMS: exam_attempts now contains exam_id, teacher_id and result
         if ($type === 'all' || $type === 'exams') {
             $q = $this->hasMany(\App\Models\ExamAttempt::class);
 
-            // previously we used whereHas('exam', ...) — now exam_attempts has teacher_id
             if ($teacherId) {
                 $q = $q->where('teacher_id', $teacherId);
             }
@@ -89,7 +88,7 @@ class Student extends Model
             $total += (float) $q->sum('result');
         }
 
-        // QUIZ: remain using quiz attempts; filter by quiz.teacher_id if needed
+        // QUIZ: unchanged — quiz_attempts with relation to quiz
         if ($type === 'all' || $type === 'quiz') {
             $q = $this->hasMany(\App\Models\QuizAttempt::class);
 
@@ -102,25 +101,24 @@ class Student extends Model
             $total += (float) $q->sum('total_score');
         }
 
-        // NOTES
+        // NOTES: unchanged
         if ($type === 'all' || $type === 'notes') {
             $notes = $this->hasMany(\App\Models\Note::class)
                 ->when($teacherId, fn($q) => $q->where('by_id', $teacherId))
                 ->get();
 
             foreach ($notes as $note) {
-                $total += (float) $note->value;
+                $total += (float) ($note->value ?? 0);
             }
         }
 
-        // ATTENDANCES
+        // ATTENDANCES: unchanged
         if ($type === 'all' || $type === 'attendances') {
             $query = $this->attendances()
                 ->when($teacherId, fn($q) => $q->where('by_id', $teacherId));
 
             $attendances = $query->with('attendanceType')->get();
             foreach ($attendances as $attendance) {
-                // guard if attendanceType missing
                 if ($attendance->attendanceType) {
                     $total += (float) $attendance->attendanceType->value;
                 }
