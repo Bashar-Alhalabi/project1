@@ -45,6 +45,7 @@ Route::group([
         'prefix' => 'v1/mobile/student',
         'middleware' => ['auth:sanctum', 'IsStudent'],
     ], function () {
+        Route::post('call/scheduled-calls', [StudentCallController::class, 'scheduledCalls']);
         Route::post('call/join', [StudentCallController::class, 'join']);
     });
     Route::group([

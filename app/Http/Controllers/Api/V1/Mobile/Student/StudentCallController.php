@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Services\Mobile\ZegoService;
-
+use App\Models\ScheduledCall;
+use Illuminate\Http\Request;
 class StudentCallController extends Controller
 {
     protected $zego;
@@ -86,20 +87,16 @@ class StudentCallController extends Controller
                     ],
                 ], 200);
             }
-
-            // Not an existing participant -> create participant and generate token
             return DB::transaction(function () use ($call, $participantUserId) {
                 $call->participants()->create([
                     'user_id' => $participantUserId,
                     'joined_at' => now(),
                     'left_at' => null,
                 ]);
-
                 $token = null;
                 if (isset($this->zego) && method_exists($this->zego, 'generateToken')) {
                     $token = $this->zego->generateToken($participantUserId);
                 }
-
                 return response()->json([
                     'success' => true,
                     'message' => __('mobile/student/call.joined'),
@@ -122,6 +119,67 @@ class StudentCallController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => __('mobile/student/call.errors.join_failed'),
+            ], 500);
+        }
+    }
+
+
+    public function scheduledCalls()
+    {
+        try {
+            $user = Auth::user();
+            $student = $user ? $user->student : null;
+
+            if (!$student) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('mobile/student/call.errors.not_student'),
+                ], 403);
+            }
+
+            $sectionId = $student->section_id;
+            if (!$sectionId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('mobile/student/call.errors.no_section'),
+                ], 422);
+            }
+            $now = now();
+            $query = ScheduledCall::query()
+                ->where('section_id', $sectionId)
+                ->where('status', 'scheduled')
+                ->with(['subject', 'teacher'])
+                ->orderBy('scheduled_at', 'asc');
+            $query->where('scheduled_at', '>=', $now);
+            $scheduled = $query->get()->map(function (ScheduledCall $s) {
+                return [
+                    'id' => $s->id,
+                    'subject' => [
+                        'id' => $s->subject_id,
+                        'name' => optional($s->subject)->name,
+                    ],
+                    'teacher' => [
+                        'id' => $s->created_by,
+                        'name' => optional($s->teacher)->name ?? optional($s->teacher->user)->name ?? null,
+                    ],
+                    'channel_name' => $s->channel_name,
+                    'scheduled_at' => $s->scheduled_at ? $s->scheduled_at->toDateTimeString() : null,
+                    'duration_minutes' => (int) $s->duration_minutes,
+                    'status' => $s->status,
+                ];
+            })->values();
+            return response()->json([
+                'success' => true,
+                'data' => $scheduled,
+            ], 200);
+        } catch (\Throwable $e) {
+            \Log::error('Failed fetching scheduled calls for student', [
+                'student_id' => optional($student)->id,
+                'error' => $e->getMessage(),
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => __('mobile/student/call.errors.fetch_failed'),
             ], 500);
         }
     }

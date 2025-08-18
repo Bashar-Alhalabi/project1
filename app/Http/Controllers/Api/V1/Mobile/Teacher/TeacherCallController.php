@@ -198,7 +198,7 @@ class TeacherCallController extends Controller
             if (!$teacher) {
                 return response()->json([
                     'success' => false,
-                    'message' => __('mobile/call.errors.not_teacher'),
+                    'message' => __('mobile/teacher/call.errors.not_teacher'),
                 ], 403);
             }
             $now = Carbon::now();
