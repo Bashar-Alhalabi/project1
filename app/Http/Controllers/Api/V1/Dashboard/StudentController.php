@@ -2,57 +2,109 @@
 
 namespace App\Http\Controllers\Api\V1\Dashboard;
 
+
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
 use App\Http\Resources\StudentResource;
 use App\Models\Student;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 class StudentController extends Controller
 {
-
-   public function index(Request $request)
+    private function generateStudentId()
     {
-        $q = Student::query();
+        return 'STU-' . strtoupper(Str::random(8));
+    }
 
-        if ($search = $request->query('q')) {
-            $q->where(function ($w) use ($search) {
-                $w->where('first_name', 'like', "%$search%")
-                  ->orWhere('last_name', 'like', "%$search%")
-                  ->orWhere('class', 'like', "%$search%");
-            });
-        }
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:50|min:2',
+            'last_name' => 'required|string|max:50|min:2',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8',
+            'stage_id' => 'required|integer|exists:stages,id',
+            'classroom_id' => 'required|integer|exists:classrooms,id',
+            'section_id' => 'required|integer|exists:sections,id',
+            'gender' => ['required', Rule::in(['Male', 'Female', 'Other'])],
+            'father_name' => 'nullable|string|max:255',
+            'mother_name' => 'nullable|string|max:255',
+            'father_work' => 'nullable|string|max:255',
+             'mother_work' => 'nullable|string|max:255',
+            'father_number' => 'nullable|string|max:255',
+            'mother_number' => 'nullable|string|max:255',
+            'birth_day' => 'required|date',
+            'location' => 'required|string|min:8',     
 
-        $students = $q->latest()->paginate($request->integer('per_page', 15));
-        return StudentResource::collection($students)->additional([
-            'message' => __('messages.list_success'),
+        ]); 
+         $email = $request->email ;
+        $password = $request->password ;
+
+         DB::beginTransaction();
+    try {
+
+        $user = User::create([
+            'first_name' => $validated['first_name'],
+            'last_name'  => $validated['last_name'],
+            'email'      => $email,
+            'password'   => Hash::make($password),
+            'role_id'    => 1,
         ]);
-    }
 
-    public function store(StoreStudentRequest $request)
-    {
-        $student = Student::create($request->validated());
-        return (new StudentResource($student))
-            ->additional(['message' => __('messages.student_created')])
-            ->response()->setStatusCode(201);
-    }
 
-     public function show(Student $student)
-    {
-        return (new StudentResource($student))
-            ->additional(['message' => __('messages.show_success')]);
-    }
+        $student = Student::create([
+            'user_id' => $user->id,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'gender' => $request->gender,
+            'father_name' => $validated['father_name'],
+            'mother_name' =>$validated['mother_name'],
+            'location' =>  $validated['location'],
+            'stage_id' => $validated['stage_id'],
+            'section_id' => $validated['section_id'],
+            'classroom_id' => $validated['classroom_id'],
+            'father_work' => $validated['father_work'],
+             'mother_work' => $validated['mother_work'],
+            'father_phone' => $validated['father_number'],
+            'mother_phone' => $validated['mother_number'],
+            'birth_day' => $validated['birth_day'],   
+        ]);
 
-     public function update(UpdateStudentRequest $request, Student $student)
-    {
-        $student->update($request->validated());
-        return (new StudentResource($student))
-            ->additional(['message' => __('messages.student_updated')]);
+
+       DB::commit();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Student created successfully',
+            'data' => [
+                'student' => $student,
+                'user_account' => [
+                    'email' => $email,
+                    'password' => $password
+                ]
+            ]
+        ], 201);
+
+    } catch (\Exception $e) {
+
+        DB::rollBack();
+
+        \Log::error('Create student failed: '.$e->getMessage());
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to create student',
+            'error' => $e->getMessage(),
+        ], 500);
     }
-     public function destroy(Student $student)
-    {
-        $student->delete();
-        return response()->json(['message' => __('messages.student_deleted')], 200);
-    }
+}
+    public function show(Student $student) {
+        return $student;
+    }        
 }

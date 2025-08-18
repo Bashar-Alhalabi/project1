@@ -4,6 +4,7 @@ return [
     'email_invalid' => 'Invalid email format.',
     'email_min' => 'Email must be at least :min characters.',
     'email_max' => 'Email may not exceed :max characters.',
+    'success' => 'Logged in succesfully',
 
     'password_required' => 'Password is required.',
     'password_min' => 'Password must be at least :min characters.',

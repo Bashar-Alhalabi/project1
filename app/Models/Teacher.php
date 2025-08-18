@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Teacher extends Model
 {
-    protected $fillable = ['user_id', 'phone', 'lesson_rate'];
+    protected $fillable = ['user_id', 'phone'];
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -27,32 +27,23 @@ class Teacher extends Model
             'id',
             'subject_id'
         );
-        // Option B: via belongsToMany (same table, no pivot model)
-        // return $this->belongsToMany(
-        //     Subject::class,
-        //     'section_subjects',
-        //     'teacher_id',
-        //     'subject_id'
-        // )->withTimestamps()->distinct();
+    }
+    /**
+     * Get all Sections this teacher actually teaches (unique).
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function sectionsTaught()
+    {
+        return \App\Models\Section::whereIn('id', function ($q) {
+            $q->select('section_id')
+                ->from('section_subjects')
+                ->where('teacher_id', $this->id);
+        })->get();
     }
 
-    public function salaryPayouts()
+    public function teacherPopularities()
     {
-        return $this->morphMany(SalaryPayout::class, 'payee');
-    }
-
-    public function salaryAdjustments()
-    {
-        return $this->morphMany(SalaryAdjustment::class, 'payee');
-    }
-
-    public function salaryReceipts()
-    {
-        return $this->morphMany(SalaryReceipt::class, 'payee');
-    }
-
-    public function salaryAccounts()
-    {
-        return $this->morphMany(SalaryAccount::class, 'payee');
+        return $this->hasMany(TeacherPopularity::class);
     }
 }

@@ -11,8 +11,4 @@ class Year extends Model
     {
         return $this->hasMany(Semester::class);
     }
-    public function fees()
-    {
-        return $this->hasMany(Fee::class);
-    }
 }

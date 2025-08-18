@@ -12,9 +12,11 @@ return new class extends Migration {
     {
         Schema::create('exam_attempts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('exam_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('exam_id')->constrained('exams')->cascadeOnDelete();
             $table->foreignId('student_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('teacher_id')->constrained()->cascadeOnDelete();
             $table->decimal('result', 8, 2)->default(0.00);
+            $table->enum('status', ['approved', 'wait'])->default('wait');
             $table->timestamps();
         });
     }

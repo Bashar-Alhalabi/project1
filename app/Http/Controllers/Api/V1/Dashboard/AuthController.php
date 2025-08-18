@@ -23,12 +23,19 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
         if (Auth::attempt( $credentials)) {
            $user = Auth::user() ;
+           if($user->role_id!=5){
+                return response()->json([
+                    'success'=>false,
+                    'message'=>"Yoar not a maneger "
+                    ],422);
+           }
            $token = $user->createToken('auth_token')->plainTextToken ;
            
             return response()->json([
                 'message' => __('dashboard/auth.success'),
                 'access_token' => $token,
                 'token_type' => 'Bearer',
+                'role_id' => 'required|exists:roles,id',
 
             ],200) ;
         }

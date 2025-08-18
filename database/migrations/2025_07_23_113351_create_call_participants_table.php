@@ -10,13 +10,12 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('fees', function (Blueprint $table) {
+        Schema::create('call_participants', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->integer('value');
-            $table->foreignId('year_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('stage_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('classroom_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignId('call_id')->constrained('calls')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->timestamp('joined_at')->nullable();
+            $table->timestamp('left_at')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('fees');
+        Schema::dropIfExists('call_participants');
     }
 };

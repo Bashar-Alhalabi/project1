@@ -3,35 +3,47 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Exam extends Model
 {
+    protected $table = 'exams';
+
     protected $fillable = [
+        'created_by',
+        'section_id',
         'subject_id',
-        'classroom_id',
-        'exam_group_id',
+        'semester_id',
+        'name',
+        'status',
         'max_result',
-        'exam_date',
-        'start_time',
-        'end_time'
     ];
 
-    public function subject()
+    protected $casts = [
+        'max_result' => 'float',
+    ];
+
+    public const STATUS_WAIT = 'wait';
+    public const STATUS_RELEASED = 'released';
+
+    // Relations
+    public function supervisor(): BelongsTo
+    {
+        return $this->belongsTo(Supervisor::class, 'created_by');
+    }
+
+    public function section(): BelongsTo
+    {
+        return $this->belongsTo(Section::class);
+    }
+
+    public function subject(): BelongsTo
     {
         return $this->belongsTo(Subject::class);
     }
 
-    public function classroom()
-    {
-        return $this->belongsTo(Classroom::class);
-    }
-
-    public function group()
-    {
-        return $this->belongsTo(ExamsGroup::class, 'exams_group_id');
-    }
-
-    public function attempts()
+    public function attempts(): HasMany
     {
         return $this->hasMany(ExamAttempt::class);
     }

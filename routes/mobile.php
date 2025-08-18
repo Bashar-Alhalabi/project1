@@ -19,7 +19,17 @@ use App\Http\Controllers\Api\v1\Dashboard\YearController as DashboardYearControl
 use App\Http\Controllers\Api\v1\Dashboard\EventsController as DashboardEventsController;
 use App\Http\Controllers\Api\v1\Dashboard\LoginStudentController as DashboardLoginStudentController ;
 
-require __DIR__ . '/mobile.php';
-require __DIR__ . '/dashboard.php';
+Route::group([
+    'prefix' => LaravelLocalization::setLocale(),
+    'middleware' => ['api', 'localize'],
+], function () {
+    Route::get('v1/test', function () {
+        return response()->json(['message' => app()->getLocale(),]);
+    });
+    Route::post('v1/mobile/login', [AuthController::class, 'login'])
+        ->name('mobile.login');
+});
 
-
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});

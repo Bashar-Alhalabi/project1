@@ -13,8 +13,8 @@ return new class extends Migration {
         Schema::create('supervisors', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('stage_id')->constrained()->cascadeOnDelete();
             $table->string('phone');
-            $table->integer('salary');
             $table->timestamps();
         });
     }

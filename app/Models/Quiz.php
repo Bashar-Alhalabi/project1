@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Quiz extends Model
 {
-    protected $fillable = ['name', 'semester_id', 'classroom_id', 'teacher_id', 'section_id', 'subject_id'];
+    protected $fillable = ['name', 'semester_id', 'classroom_id', 'teacher_id', 'section_id', 'subject_id', 'start_time', 'end_time'];
     public function subject()
     {
         return $this->belongsTo(Subject::class);

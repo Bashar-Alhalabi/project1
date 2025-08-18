@@ -6,15 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Semester extends Model
 {
-    protected $fillable = ['name', 'year_id','start_date','end_date'];
+    protected $fillable = ['name', 'year_id', 'start_date', 'end_date'];
     public function year()
     {
         return $this->belongsTo(Year::class);
     }
 
-    public function exams()
+    public function examAttempts()
     {
-        return $this->hasMany(Exam::class);
+        return $this->hasMany(ExamAttempt::class);
     }
 
     public function quizzes()

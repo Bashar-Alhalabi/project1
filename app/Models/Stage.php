@@ -15,8 +15,4 @@ class Stage extends Model
     {
         return $this->hasMany(Student::class);
     }
-    public function fees()
-    {
-        return $this->hasMany(Fee::class);
-    }
 }
