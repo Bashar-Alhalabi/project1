@@ -191,6 +191,63 @@ class TeacherCallController extends Controller
             ], 500);
         }
     }
+
+
+    public function scheduledCalls()
+    {
+        try {
+            $user = auth()->user();
+            $teacher = $user ? $user->teacher : null;
+
+            if (!$teacher) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('mobile/call.errors.not_teacher'),
+                ], 403);
+            }
+            $now = Carbon::now();
+            $query = ScheduledCall::query()
+                ->where('created_by', $teacher->id)
+                ->where('status', 'scheduled')
+                ->with(['section', 'subject'])
+                ->orderBy('scheduled_at', 'asc');
+            $query->where('scheduled_at', '>=', $now);
+            $scheduled = $query->get()->map(function (ScheduledCall $s) {
+                return [
+                    'id' => $s->id,
+                    'section' => [
+                        'id' => $s->section_id,
+                        'name' => optional($s->section)->name,
+                    ],
+                    'subject' => [
+                        'id' => $s->subject_id,
+                        'name' => optional($s->subject)->name,
+                    ],
+                    'channel_name' => $s->channel_name,
+                    'scheduled_at' => $s->scheduled_at ? $s->scheduled_at->toDateTimeString() : null,
+                    'duration_minutes' => (int) $s->duration_minutes,
+                    'status' => $s->status,
+                    'call_id' => $s->call_id, // null until started
+                    'created_at' => $s->created_at->toDateTimeString(),
+                ];
+            })->values();
+
+            return response()->json([
+                'success' => true,
+                'data' => $scheduled,
+            ]);
+        } catch (\Throwable $e) {
+            \Log::error('Error fetching scheduled calls for teacher', [
+                'teacher_id' => optional(auth()->user()->teacher)->id,
+                'error' => $e->getMessage(),
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => __('mobile/teacher/call.errors.fetch_scheduled_failed') ?? 'Failed to fetch scheduled calls.',
+            ], 500);
+        }
+    }
+
     /**
      * Teacher ends a call.
      */

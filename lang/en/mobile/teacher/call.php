@@ -33,6 +33,7 @@ return [
 
     'errors' => [
         'not_teacher' => 'Authenticated user is not a teacher.',
+        'fetch_scheduled_failed' => 'Failed to fetch scheduled calls. Please try again.',
         'section_or_subject_not_assigned' => 'You are not assigned to teach/manage the selected section and subject.',
         'scheduled_overlap' => 'You already have a scheduled call that overlaps this time.',
         'scheduled_overlap_with_active' => 'You already have an active call that overlaps the scheduled time.',

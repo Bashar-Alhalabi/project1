@@ -32,6 +32,7 @@ return [
 
     'errors' => [
         'not_teacher' => 'المستخدم الحالي ليس معلماً.',
+        'fetch_scheduled_failed' => 'فشل جلب المكالمات المجدولة. حاول مرة أخرى.',
         'section_or_subject_not_assigned' => 'أنت غير مكلف بتدريس/إدارة الشعبة والمادة المحددة.',
         'scheduled_overlap' => 'لديك بالفعل مكالمة مجدولة تتداخل مع هذا الوقت.',
         'scheduled_overlap_with_active' => 'لديك مكالمة نشطة تتداخل مع وقت الجدولة.',

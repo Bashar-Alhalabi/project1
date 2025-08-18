@@ -32,6 +32,7 @@ Route::group([
         Route::get('students', [TeacherStudentsController::class, 'index']);
         Route::get('weekly-schedule', [TeacherScheduleController::class, 'weekly']);
         Route::post('call/schedule', [TeacherCallController::class, 'schedule']);
+        Route::get('call/scheduled-calls', [TeacherCallController::class, 'scheduledCalls']);
         Route::post('scheduled-call/{scheduled_call}/start', [TeacherCallController::class, 'startScheduled']);
         Route::post('call/{call}/end', [TeacherCallController::class, 'end']);
         Route::post('notes/create', [TeacherNoteController::class, 'store']);
