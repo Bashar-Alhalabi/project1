@@ -125,6 +125,7 @@ class TeacherCallController extends Controller
                 'errors' => ['active_call' => [__('mobile/teacher/call.errors.active_call_exists')]]
             ], 422);
         }
+
         if (now()->lt($scheduled_call->scheduled_at)) {
             return response()->json([
                 'status' => false,
@@ -152,29 +153,24 @@ class TeacherCallController extends Controller
                     'started_at' => now(),
                     'ended_at' => null,
                 ]);
-
-                // create participant record for teacher
                 $call->participants()->create([
                     'user_id' => auth()->id(),
                     'joined_at' => now(),
                 ]);
-
-                // link scheduled -> call and mark scheduled as started
                 $scheduled_call->update([
                     'status' => 'started',
                     'call_id' => $call->id,
                 ]);
-
-                // generate token
                 $token = null;
                 if (isset($this->zego) && method_exists($this->zego, 'generateToken')) {
                     $token = $this->zego->generateToken(auth()->id());
                 }
-
                 return response()->json([
                     'status' => true,
                     'message' => __('mobile/teacher/call.started'),
                     'data' => [
+                        'user_id' => Auth::id(),
+                        'user_name' => Auth::user()->email,
                         'call_id' => $call->id,
                         'channel_name' => $call->channel_name,
                         'token' => $token,
