@@ -21,7 +21,7 @@ class TeacherExamAttemptController extends Controller
         $user = Auth::user();
         $teacher = $user ? $user->teacher : null;
         if (!$teacher) {
-            return response()->json(['success' => false, 'message' => __('mobile/exam.errors.not_teacher')], 403);
+            return response()->json(['success' => false, 'message' => __('mobile/teacher/exam.errors.not_teacher')], 403);
         }
         $exams = Exam::query()
             ->where('status', Exam::STATUS_WAIT)
@@ -44,13 +44,13 @@ class TeacherExamAttemptController extends Controller
         if (!$teacher) {
             return response()->json([
                 'success' => false,
-                'message' => __('mobile/exam.errors.not_teacher'),
+                'message' => __('mobile/teacher/exam.errors.not_teacher'),
             ], 403);
         }
         if ($exam->status !== Exam::STATUS_WAIT) {
             return response()->json([
                 'success' => false,
-                'message' => __('mobile/exam.errors.exam_not_open'),
+                'message' => __('mobile/teacher/exam.errors.exam_not_open'),
             ], 422);
         }
         $assigned = SectionSubject::where('section_id', $exam->section_id)
@@ -60,13 +60,13 @@ class TeacherExamAttemptController extends Controller
         if (!$assigned) {
             return response()->json([
                 'success' => false,
-                'message' => __('mobile/exam.errors.teacher_not_assigned'),
+                'message' => __('mobile/teacher/exam.errors.teacher_not_assigned'),
             ], 403);
         }
         if ($exam->max_result === null) {
             return response()->json([
                 'success' => false,
-                'message' => __('mobile/exam.errors.max_result_not_set'),
+                'message' => __('mobile/teacher/exam.errors.max_result_not_set'),
             ], 422);
         }
         $maxAllowed = (float) $exam->max_result;
@@ -80,21 +80,21 @@ class TeacherExamAttemptController extends Controller
                 ->where('section_id', $exam->section_id)
                 ->first();
             if (!$student) {
-                $errors->add("results.$idx.student_id", __('mobile/exam.errors.student_not_in_section'));
+                $errors->add("results.$idx.student_id", __('mobile/teacher/exam.errors.student_not_in_section'));
                 continue;
             }
             if (!is_numeric($resultVal)) {
-                $errors->add("results.$idx.result", __('mobile/exam.validation.result_numeric'));
+                $errors->add("results.$idx.result", __('mobile/teacher/exam.validation.result_numeric'));
                 continue;
             }
             if ((float) $resultVal > $maxAllowed) {
-                $errors->add("results.$idx.result", __('mobile/exam.validation.result_max', ['max' => $maxAllowed]));
+                $errors->add("results.$idx.result", __('mobile/teacher/exam.validation.result_max', ['max' => $maxAllowed]));
             }
         }
         if ($errors->any()) {
             return response()->json([
                 'success' => false,
-                'message' => __('mobile/exam.validation_failed'),
+                'message' => __('mobile/teacher/exam.validation_failed'),
                 'errors' => $errors->messages(),
             ], 422);
         }
@@ -120,13 +120,13 @@ class TeacherExamAttemptController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => __('mobile/exam.store.success'),
+                'message' => __('mobile/teacher/exam.store.success'),
             ], 201);
         } catch (\Throwable $e) {
             \Log::error('Failed to store exam results', ['error' => $e->getMessage(), 'exam_id' => $exam->id]);
             return response()->json([
                 'success' => false,
-                'message' => __('mobile/exam.store.error'),
+                'message' => __('mobile/teacher/exam.store.error'),
             ], 500);
         }
     }

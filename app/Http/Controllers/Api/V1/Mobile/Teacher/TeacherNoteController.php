@@ -26,7 +26,7 @@ class TeacherNoteController extends Controller
             ]);
             return response()->json([
                 'success' => true,
-                'message' => __('mobile/notes.created'),
+                'message' => __('mobile/teacher/notes.created'),
                 'note' => $note,
             ], 201);
         } catch (Exception $e) {
@@ -36,7 +36,7 @@ class TeacherNoteController extends Controller
             ]);
             return response()->json([
                 'success' => false,
-                'message' => __('mobile/notes.server_error'),
+                'message' => __('mobile/teacher/notes.server_error'),
             ], 500);
         }
     }

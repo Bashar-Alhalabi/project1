@@ -54,7 +54,7 @@ class TeacherHomeController extends Controller
             ]);
             return response()->json([
                 'success' => false,
-                'message' => __('mobile/notes.server_error'),
+                'message' => __('mobile/teacher/notes.server_error'),
             ], 500);
         }
     }

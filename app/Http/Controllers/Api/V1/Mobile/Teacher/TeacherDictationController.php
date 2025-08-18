@@ -28,7 +28,7 @@ class TeacherDictationController extends Controller
             if (!$teaches) {
                 return response()->json([
                     'success' => false,
-                    'message' => __('mobile/dictation.errors.teacher_not_assigned'),
+                    'message' => __('mobile/teacher/dictation.errors.teacher_not_assigned'),
                 ], 403);
             }
             $dictation = Dictation::create([
@@ -41,7 +41,7 @@ class TeacherDictationController extends Controller
             ]);
             return response()->json([
                 'success' => true,
-                'message' => __('mobile/dictation.store.success'),
+                'message' => __('mobile/teacher/dictation.store.success'),
                 'data' => $dictation,
             ], 201);
         } catch (\Throwable $e) {
@@ -52,7 +52,7 @@ class TeacherDictationController extends Controller
             ]);
             return response()->json([
                 'success' => false,
-                'message' => __('mobile/dictation.store.error'),
+                'message' => __('mobile/teacher/dictation.store.error'),
             ], 500);
         }
     }

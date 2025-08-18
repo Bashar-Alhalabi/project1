@@ -16,7 +16,7 @@ class EnsureActiveSemesterExist
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $exist = Semester::where('is_active', true)->exist();
+        $exist = Semester::where('is_active', true)->exists();
         if ($exist)
             return $next($request);
         else {

@@ -28,7 +28,7 @@ class TeacherCallController extends Controller
         if (!$teacher) {
             return response()->json([
                 'status' => false,
-                'message' => __('mobile/call.errors.not_teacher'),
+                'message' => __('mobile/teacher/call.errors.not_teacher'),
             ], 403);
         }
         $data = $request->validated();
@@ -44,7 +44,7 @@ class TeacherCallController extends Controller
         if (!$assigned) {
             return response()->json([
                 'status' => false,
-                'message' => __('mobile/call.errors.section_or_subject_not_assigned'),
+                'message' => __('mobile/teacher/call.errors.section_or_subject_not_assigned'),
             ], 403);
         }
         $newStart = $scheduledAt->copy();
@@ -57,8 +57,8 @@ class TeacherCallController extends Controller
         if ($overlap) {
             return response()->json([
                 'status' => false,
-                'message' => __('mobile/call.errors.scheduled_overlap'),
-                'errors' => ['scheduled_at' => [__('mobile/call.errors.scheduled_overlap')]],
+                'message' => __('mobile/teacher/call.errors.scheduled_overlap'),
+                'errors' => ['scheduled_at' => [__('mobile/teacher/call.errors.scheduled_overlap')]],
             ], 422);
         }
         $activeOverlap = Call::where('created_by', $teacher->id)
@@ -70,8 +70,8 @@ class TeacherCallController extends Controller
         if ($activeOverlap) {
             return response()->json([
                 'status' => false,
-                'message' => __('mobile/call.errors.scheduled_overlap_with_active'),
-                'errors' => ['scheduled_at' => [__('mobile/call.errors.scheduled_overlap_with_active')]],
+                'message' => __('mobile/teacher/call.errors.scheduled_overlap_with_active'),
+                'errors' => ['scheduled_at' => [__('mobile/teacher/call.errors.scheduled_overlap_with_active')]],
             ], 422);
         }
         try {
@@ -87,7 +87,7 @@ class TeacherCallController extends Controller
 
             return response()->json([
                 'status' => true,
-                'message' => __('mobile/call.scheduled_created'),
+                'message' => __('mobile/teacher/call.scheduled_created'),
                 'data' => [
                     'scheduled_call_id' => $scheduled->id,
                     'scheduled_at' => $scheduled->scheduled_at->toDateTimeString(),
@@ -98,7 +98,7 @@ class TeacherCallController extends Controller
             \Log::error('Schedule call error', ['teacher_id' => $teacher->id, 'error' => $e->getMessage()]);
             return response()->json([
                 'status' => false,
-                'message' => __('mobile/call.errors.save_failed'),
+                'message' => __('mobile/teacher/call.errors.save_failed'),
                 'error' => $e->getMessage(),
             ], 500);
         }
@@ -109,29 +109,29 @@ class TeacherCallController extends Controller
         $user = auth()->user();
         $teacher = $user ? $user->teacher : null;
         if (!$teacher) {
-            return response()->json(['status' => false, 'message' => __('mobile/call.errors.not_teacher')], 403);
+            return response()->json(['status' => false, 'message' => __('mobile/teacher/call.errors.not_teacher')], 403);
         }
         if ($scheduled_call->created_by !== $teacher->id) {
-            return response()->json(['status' => false, 'message' => __('mobile/call.errors.not_owner_of_scheduled')], 403);
+            return response()->json(['status' => false, 'message' => __('mobile/teacher/call.errors.not_owner_of_scheduled')], 403);
         }
         if ($scheduled_call->status !== 'scheduled') {
-            return response()->json(['status' => false, 'message' => __('mobile/call.errors.invalid_scheduled_status')], 422);
+            return response()->json(['status' => false, 'message' => __('mobile/teacher/call.errors.invalid_scheduled_status')], 422);
         }
         $hasActive = Call::where('created_by', $teacher->id)->whereNull('ended_at')->exists();
         if ($hasActive) {
             return response()->json([
                 'status' => false,
-                'message' => __('mobile/call.errors.active_call_exists'),
-                'errors' => ['active_call' => [__('mobile/call.errors.active_call_exists')]]
+                'message' => __('mobile/teacher/call.errors.active_call_exists'),
+                'errors' => ['active_call' => [__('mobile/teacher/call.errors.active_call_exists')]]
             ], 422);
         }
         if (now()->lt($scheduled_call->scheduled_at)) {
             return response()->json([
                 'status' => false,
-                'message' => __('mobile/call.errors.cannot_start_before_scheduled'),
+                'message' => __('mobile/teacher/call.errors.cannot_start_before_scheduled'),
                 'errors' => [
                     'scheduled_call' => [
-                        __('mobile/call.errors.cannot_start_before_scheduled_detail', [
+                        __('mobile/teacher/call.errors.cannot_start_before_scheduled_detail', [
                             'scheduled_at' => $scheduled_call->scheduled_at->toDateTimeString(),
 
                         ])
@@ -173,7 +173,7 @@ class TeacherCallController extends Controller
 
                 return response()->json([
                     'status' => true,
-                    'message' => __('mobile/call.started'),
+                    'message' => __('mobile/teacher/call.started'),
                     'data' => [
                         'call_id' => $call->id,
                         'channel_name' => $call->channel_name,
@@ -186,7 +186,7 @@ class TeacherCallController extends Controller
             \Log::error('Error starting scheduled call', ['scheduled_call_id' => $scheduled_call->id, 'error' => $e->getMessage()]);
             return response()->json([
                 'status' => false,
-                'message' => __('mobile/call.errors.save_failed'),
+                'message' => __('mobile/teacher/call.errors.save_failed'),
                 'error' => $e->getMessage(),
             ], 500);
         }

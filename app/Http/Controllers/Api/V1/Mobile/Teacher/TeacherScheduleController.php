@@ -19,17 +19,19 @@ class TeacherScheduleController extends Controller
             ->get()
             ->groupBy('day_of_week');
         $schedule = $slots->mapWithKeys(function ($daySlots, $day) {
-            return [$day => $daySlots->map(function ($slot) {
-                return [
-                    'section'   => $slot->section->name,
-                    'period'    => $slot->period->name,
-                    'time'      => $slot->period->start_time . ' - ' . $slot->period->end_time,
-                    'subject'   => $slot->subject->name,
-                ];
-            })->values()];
+            return [
+                $day => $daySlots->map(function ($slot) {
+                    return [
+                        'section' => $slot->section->name,
+                        'period' => $slot->period->name,
+                        'time' => $slot->period->start_time . ' - ' . $slot->period->end_time,
+                        'subject' => $slot->subject->name,
+                    ];
+                })->values()
+            ];
         });
         return response()->json([
-            'success'  => true,
+            'success' => true,
             'schedule' => $schedule,
         ]);
     }
