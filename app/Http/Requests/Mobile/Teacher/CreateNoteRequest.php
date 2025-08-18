@@ -24,15 +24,15 @@ class CreateNoteRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'student_id.required' => __('mobile/notes.student_required'),
-            'student_id.exists' => __('mobile/notes.student_exists'),
-            'type.required' => __('mobile/notes.type_required'),
-            'type.string' => __('mobile/notes.type_string'),
-            'type.in' => __('mobile/notes.type_in'),
-            'reason.required' => __('mobile/notes.reason_required'),
-            'reason.string' => __('mobile/notes.reason_string'),
-            'reason.max' => __('mobile/notes.reason_max'),
-            'reason.min' => __('mobile/notes.reason_min'),
+            'student_id.required' => __('mobile/teacher/notes.student_required'),
+            'student_id.exists' => __('mobile/teacher/notes.student_exists'),
+            'type.required' => __('mobile/teacher/notes.type_required'),
+            'type.string' => __('mobile/teacher/notes.type_string'),
+            'type.in' => __('mobile/teacher/notes.type_in'),
+            'reason.required' => __('mobile/teacher/notes.reason_required'),
+            'reason.string' => __('mobile/teacher/notes.reason_string'),
+            'reason.max' => __('mobile/teacher/notes.reason_max'),
+            'reason.min' => __('mobile/teacher/notes.reason_min'),
         ];
     }
 }

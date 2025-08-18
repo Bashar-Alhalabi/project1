@@ -24,13 +24,13 @@ class LoginRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'email.required' => __('mobile/auth.email_required'),
-            'email.email' => __('mobile/auth.email_invalid'),
-            'email.min' => __('mobile/auth.email_min'),
-            'email.max' => __('mobile/auth.email_max'),
-            'password.required' => __('mobile/auth.password_required'),
-            'password.min' => __('mobile/auth.password_min'),
-            'password.max' => __('mobile/auth.password_max'),
+            'email.required' => __('mobile/auth/auth.email_required'),
+            'email.email' => __('mobile/auth/auth.email_invalid'),
+            'email.min' => __('mobile/auth/auth.email_min'),
+            'email.max' => __('mobile/auth/auth.email_max'),
+            'password.required' => __('mobile/auth/auth.password_required'),
+            'password.min' => __('mobile/auth/auth.password_min'),
+            'password.max' => __('mobile/auth/auth.password_max'),
         ];
     }
 

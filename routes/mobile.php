@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\V1\Mobile\Teacher\TeacherStudentsController;
 use App\Http\Controllers\Api\V1\Mobile\Teacher\TeacherScheduleController;
 use App\Http\Controllers\Api\V1\Mobile\Teacher\TeacherNoteController;
 use App\Http\Controllers\Api\V1\Mobile\Teacher\TeacherDictationController;
+use App\Http\Controllers\Api\V1\Mobile\Supervisor\SupervisorStudentsController;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
@@ -25,7 +26,7 @@ Route::group([
         ->name('login');
     Route::group([
         'prefix' => 'v1/mobile/teacher',
-        'middleware' => ['auth:sanctum', 'IsTeacher'],
+        'middleware' => ['auth:sanctum', 'IsTeacher', 'EnsureActiveSemesterExist'],
     ], function () {
         Route::get('home', [TeacherHomeController::class, 'index']);
         Route::get('students', [TeacherStudentsController::class, 'index']);
@@ -44,5 +45,11 @@ Route::group([
         'middleware' => ['auth:sanctum', 'IsStudent'],
     ], function () {
         Route::post('call/join', [StudentCallController::class, 'join']);
+    });
+    Route::group([
+        'prefix' => 'v1/mobile/supervisor',
+        'middleware' => ['auth:sanctum', 'IsSupervisor'],
+    ], function () {
+        Route::get('students', [SupervisorStudentsController::class, 'index']);
     });
 });

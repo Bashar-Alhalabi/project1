@@ -28,24 +28,24 @@ class ScheduleCallRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'section_id.required' => __('mobile/call.validation.section_required'),
-            'section_id.integer' => __('mobile/call.validation.section_integer'),
-            'section_id.exists' => __('mobile/call.validation.section_exists'),
+            'section_id.required' => __('mobile/teacher/call.validation.section_required'),
+            'section_id.integer' => __('mobile/teacher/call.validation.section_integer'),
+            'section_id.exists' => __('mobile/teacher/call.validation.section_exists'),
 
-            'subject_id.required' => __('mobile/call.validation.subject_required'),
-            'subject_id.integer' => __('mobile/call.validation.subject_integer'),
-            'subject_id.exists' => __('mobile/call.validation.subject_exists'),
+            'subject_id.required' => __('mobile/teacher/call.validation.subject_required'),
+            'subject_id.integer' => __('mobile/teacher/call.validation.subject_integer'),
+            'subject_id.exists' => __('mobile/teacher/call.validation.subject_exists'),
 
-            'scheduled_at.required' => __('mobile/call.validation.scheduled_required'),
-            'scheduled_at.date' => __('mobile/call.validation.scheduled_date'),
-            'scheduled_at.after' => __('mobile/call.validation.scheduled_after_now'),
+            'scheduled_at.required' => __('mobile/teacher/call.validation.scheduled_required'),
+            'scheduled_at.date' => __('mobile/teacher/call.validation.scheduled_date'),
+            'scheduled_at.after' => __('mobile/teacher/call.validation.scheduled_after_now'),
 
-            'duration_minutes.integer' => __('mobile/call.validation.duration_integer'),
-            'duration_minutes.min' => __('mobile/call.validation.duration_min'),
-            'duration_minutes.max' => __('mobile/call.validation.duration_max'),
+            'duration_minutes.integer' => __('mobile/teacher/call.validation.duration_integer'),
+            'duration_minutes.min' => __('mobile/teacher/call.validation.duration_min'),
+            'duration_minutes.max' => __('mobile/teacher/call.validation.duration_max'),
 
-            'channel_name.string' => __('mobile/call.validation.channel_string'),
-            'channel_name.max' => __('mobile/call.validation.channel_max'),
+            'channel_name.string' => __('mobile/teacher/call.validation.channel_string'),
+            'channel_name.max' => __('mobile/teacher/call.validation.channel_max'),
         ];
     }
 }

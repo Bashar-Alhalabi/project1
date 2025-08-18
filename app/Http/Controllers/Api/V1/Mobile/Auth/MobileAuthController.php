@@ -18,7 +18,7 @@ class MobileAuthController extends Controller
 
             if (!Auth::attempt($credentials)) {
                 return response()->json([
-                    'message' => __('mobile/auth.invalid_credentials'),
+                    'message' => __('mobile/auth/auth.invalid_credentials'),
                 ], 401);
             }
 
@@ -26,14 +26,14 @@ class MobileAuthController extends Controller
 
             if (!$user->hasVerifiedEmail() || !$user) {
                 return response()->json([
-                    'message' => __('mobile/auth.email_not_verified'),
+                    'message' => __('mobile/auth/auth.email_not_verified'),
                 ], 403);
             }
 
             $token = $user->createToken('mobile')->plainTextToken;
 
             return response()->json([
-                'message' => __('mobile/auth.success'),
+                'message' => __('mobile/auth/auth.success'),
                 'data' => [
                     'user' => [
                         'id' => $user->id,
@@ -52,7 +52,7 @@ class MobileAuthController extends Controller
             ]);
             return response()->json([
                 'success' => false,
-                'message' => __('mobile/auth.server_error'),
+                'message' => __('mobile/auth/auth.server_error'),
             ], 500);
         }
     }

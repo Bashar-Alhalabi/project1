@@ -24,18 +24,18 @@ class SubmitExamResultsRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'results.required' => __('mobile/exam.validation.results_required'),
-            'results.array' => __('mobile/exam.validation.results_array'),
-            'results.min' => __('mobile/exam.validation.results_min'),
+            'results.required' => __('mobile/teacher/exam.validation.results_required'),
+            'results.array' => __('mobile/teacher/exam.validation.results_array'),
+            'results.min' => __('mobile/teacher/exam.validation.results_min'),
 
-            'results.*.student_id.required' => __('mobile/exam.validation.student_id_required'),
-            'results.*.student_id.integer' => __('mobile/exam.validation.student_id_integer'),
-            'results.*.student_id.distinct' => __('mobile/exam.validation.student_id_distinct'),
-            'results.*.student_id.exists' => __('mobile/exam.validation.student_id_exists'),
+            'results.*.student_id.required' => __('mobile/teacher/exam.validation.student_id_required'),
+            'results.*.student_id.integer' => __('mobile/teacher/exam.validation.student_id_integer'),
+            'results.*.student_id.distinct' => __('mobile/teacher/exam.validation.student_id_distinct'),
+            'results.*.student_id.exists' => __('mobile/teacher/exam.validation.student_id_exists'),
 
-            'results.*.result.required' => __('mobile/exam.validation.result_required'),
-            'results.*.result.numeric' => __('mobile/exam.validation.result_numeric'),
-            'results.*.result.min' => __('mobile/exam.validation.result_min'),
+            'results.*.result.required' => __('mobile/teacher/exam.validation.result_required'),
+            'results.*.result.numeric' => __('mobile/teacher/exam.validation.result_numeric'),
+            'results.*.result.min' => __('mobile/teacher/exam.validation.result_min'),
         ];
     }
 }

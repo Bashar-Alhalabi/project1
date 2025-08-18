@@ -20,7 +20,7 @@ class IsTeacher
         if (!$user || $user->role_id !== 2) {
             return response()->json([
                 'success' => false,
-                'message' => __('mobile/authorization.unauthorized_teacher'),
+                'message' => __('mobile/auth/authorization.unauthorized_teacher'),
             ], 403);
         }
 

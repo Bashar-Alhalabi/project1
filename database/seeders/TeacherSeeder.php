@@ -15,16 +15,15 @@ class TeacherSeeder extends Seeder
         for ($i = 1; $i <= 5; $i++) {
             $user = User::create([
                 'first_name' => "TeacherFirst{$i}",
-                'last_name'  => "TeacherLast{$i}",
-                'email'      => "teacher{$i}@example.com",
-                'password'   => Hash::make('password'),
-                'role_id'    => Role::where('name', 'teacher')->first()->id,
+                'last_name' => "TeacherLast{$i}",
+                'email' => "teacher{$i}@example.com",
+                'password' => Hash::make('password'),
+                'role_id' => Role::where('name', 'teacher')->first()->id,
             ]);
 
             Teacher::create([
-                'user_id'     => $user->id,
-                'phone'       => "011000000{$i}",
-                'lesson_rate' => 50 + $i * 5,
+                'user_id' => $user->id,
+                'phone' => "011000000{$i}",
             ]);
         }
     }

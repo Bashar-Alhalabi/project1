@@ -36,22 +36,22 @@ class CreateCallRequest extends FormRequest
     {
         return [
             // section
-            'section_id.required' => __('mobile/call.validation.section_required'),
-            'section_id.integer' => __('mobile/call.validation.section_integer'),
-            'section_id.exists' => __('mobile/call.validation.section_exists'),
+            'section_id.required' => __('mobile/teacher/call.validation.section_required'),
+            'section_id.integer' => __('mobile/teacher/call.validation.section_integer'),
+            'section_id.exists' => __('mobile/teacher/call.validation.section_exists'),
 
             // subject
-            'subject_id.required' => __('mobile/call.validation.subject_required'),
-            'subject_id.integer' => __('mobile/call.validation.subject_integer'),
-            'subject_id.exists' => __('mobile/call.validation.subject_exists'),
+            'subject_id.required' => __('mobile/teacher/call.validation.subject_required'),
+            'subject_id.integer' => __('mobile/teacher/call.validation.subject_integer'),
+            'subject_id.exists' => __('mobile/teacher/call.validation.subject_exists'),
 
             // started_at
-            'started_at.required' => __('mobile/call.validation.started_required'),
-            'started_at.date' => __('mobile/call.validation.started_date'),
+            'started_at.required' => __('mobile/teacher/call.validation.started_required'),
+            'started_at.date' => __('mobile/teacher/call.validation.started_date'),
 
             // channel name
-            'channel_name.string' => __('mobile/call.validation.channel_string'),
-            'channel_name.max' => __('mobile/call.validation.channel_max'),
+            'channel_name.string' => __('mobile/teacher/call.validation.channel_string'),
+            'channel_name.max' => __('mobile/teacher/call.validation.channel_max'),
         ];
     }
 }

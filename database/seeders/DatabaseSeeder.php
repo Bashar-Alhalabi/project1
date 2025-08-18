@@ -16,10 +16,10 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleSeeder::class,
             AdminSeeder::class,
+            StageSeeder::class,
             SupervisorSeeder::class,
             YearSeeder::class,
             SemesterSeeder::class,
-            StageSeeder::class,
             ClassroomSeeder::class,
             SubjectSeeder::class,
             SectionSeeder::class,

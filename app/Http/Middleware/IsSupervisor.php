@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
-class IsStudent
+class IsSupervisor
 {
     /**
      * Handle an incoming request.
@@ -17,13 +17,12 @@ class IsStudent
     {
         $user = Auth::user();
 
-        if (!$user || $user->role_id !== 1) {
+        if (!$user || $user->role_id !== 4) {
             return response()->json([
                 'success' => false,
-                'message' => __('mobile/auth/authorization.unauthorized_student'),
+                'message' => __('mobile/auth/authorization.unauthorized_supervisor'),
             ], 403);
         }
-
         return $next($request);
     }
 }
