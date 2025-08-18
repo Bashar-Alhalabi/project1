@@ -14,7 +14,7 @@ use App\Http\Controllers\Api\V1\Mobile\Teacher\TeacherScheduleController;
 use App\Http\Controllers\Api\V1\Mobile\Teacher\TeacherNoteController;
 use App\Http\Controllers\Api\V1\Mobile\Teacher\TeacherDictationController;
 use App\Http\Controllers\Api\V1\Mobile\Supervisor\SupervisorStudentsController;
-
+use App\Http\Controllers\Api\V1\Mobile\Supervisor\SupervisorNoteController;
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -53,5 +53,6 @@ Route::group([
         'middleware' => ['auth:sanctum', 'IsSupervisor'],
     ], function () {
         Route::get('students', [SupervisorStudentsController::class, 'index']);
+        Route::post('notes/create', [SupervisorNoteController::class, 'store']);
     });
 });
