@@ -15,20 +15,21 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->api(prepend: [
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
         ]);
-
         $middleware->alias([
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
         ]);
-
         $middleware->alias([
             'localize' => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRoutes::class,
             'localizationRedirect' => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRedirectFilter::class,
             'localeSessionRedirect' => \Mcamara\LaravelLocalization\Middleware\LocaleSessionRedirect::class,
             'localeCookieRedirect' => \Mcamara\LaravelLocalization\Middleware\LocaleCookieRedirect::class,
             'localeViewPath' => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationViewPath::class,
+            'IsTeacher' => \App\Http\Middleware\IsTeacher::class,
+            'IsStudent' => \App\Http\Middleware\IsStudent::class,
+            'IsSupervisor' => \App\Http\Middleware\IsSupervisor::class,
+            'EnsureActiveSemesterExist' => \App\Http\Middleware\EnsureActiveSemesterExist::class
         ]);
     })
-
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();

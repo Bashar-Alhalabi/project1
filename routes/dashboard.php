@@ -10,14 +10,14 @@ use App\Http\Controllers\Api\V1\Dashboard\HomeController as DashboardHomeControl
 use App\Http\Controllers\Api\V1\Dashboard\StudentController as DashboardStudentController;
 use App\Http\Controllers\Api\V1\Dashboard\StudentController;
 use App\Http\Controllers\Api\V1\Dashboard\TeacherController;
-use App\Http\Controllers\Api\V1\Dashboard\SupervisorController as DashboardSupervisorController ;
-use App\Http\Controllers\Api\V1\Dashboard\SearchController as DashboardSearchController ;
-use App\Http\Controllers\Api\V1\Dashboard\TeacherController  as DashboardTeacherController;
+use App\Http\Controllers\Api\V1\Dashboard\SupervisorController as  DashboardSupervisorController ;
+use App\Http\Controllers\Api\V1\Dashboard\SearchController as  DashboardSearchController ;
+use App\Http\Controllers\TeacherController  as DashboardTeacherController;
 use App\Http\Controllers\SessionYearController;
 use App\Http\Controllers\Api\v1\Dashboard\SemesterController as DashboardSemesterController;
 use App\Http\Controllers\Api\v1\Dashboard\YearController as DashboardYearController;
 use App\Http\Controllers\Api\v1\Dashboard\EventsController as DashboardEventsController;
-use App\Http\Controllers\Api\v1\Dashboard\LoginStudentController as DashboardLoginStudentController ;
+use App\Http\Controllers\Api\v1\Dashboard\LoginStudentController as DashboardLoginStudentController;
 
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
@@ -25,15 +25,15 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 });
 Route::group([
     'prefix' => LaravelLocalization::setLocale(),
-    'middleware' => ['api', 'localize'], 
+    'middleware' => ['api', 'localize'],
 ], function () {
     Route::post('v1/dashboard/forgot-password', [DashboardAuthController::class, 'sendPasswordResetLink']);
     Route::post('v1/dashboard/reset-password', [DashboardAuthController::class, 'resetPassword']);
-    
-     Route::middleware('auth:sanctum')->group(function () {
+
+    Route::middleware('auth:sanctum')->group(function () {
         Route::post('v1/dashboard/logout', [DashboardAuthController::class, 'logout']);
     });
-    
+
     Route::post('v1/dashboard/login', [DashboardAuthController::class, 'login'])
         ->name('dashboard.login');
 
@@ -41,10 +41,10 @@ Route::group([
 
 Route::prefix('v1/dashboard')->middleware('auth:sanctum')->group(function () {
       Route::get('/home', [DashboardHomeController::class, 'index']);
-      Route::apiResource('/student', DashboardStudentController::class);
-      Route::apiResource('/teacher', DashboardTeacherController::class);
-      Route::apiResource('/supervisor', DashboardSupervisorController::class);
-      Route::post('/search', [DashboardSearchController::class, 'search']);
+      Route::apiResource('/student', StudentController::class);
+      Route::apiResource('/teacher', TeacherController::class);
+      Route::apiResource('/supervisor',  DashboardSupervisorController::class);
+      Route::post('/search', [ DashboardSearchController::class, 'search']);
       Route::get('/semester', [DashboardSemesterController::class, 'index']);
       Route::post('/semester', [DashboardSemesterController::class, 'store']); 
       Route::post('/years', [DashboardYearController::class, 'store']); 
