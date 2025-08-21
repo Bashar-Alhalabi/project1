@@ -25,22 +25,22 @@ class StudentController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'first_name' => 'required|string|max:50|min:2',
-            'last_name' => 'required|string|max:50|min:2',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8',
-            'stage_id' => 'required|integer|exists:stages,id',
-            'classroom_id' => 'required|integer|exists:classrooms,id',
-            'section_id' => 'required|integer|exists:sections,id',
-            'gender' => ['required', Rule::in(['Male', 'Female', 'Other'])],
+            'first_name' => 'required|string|max:50|min:2',
+            'last_name' => 'required|string|max:50|min:2',
             'father_name' => 'nullable|string|max:255',
             'mother_name' => 'nullable|string|max:255',
-            'father_work' => 'nullable|string|max:255',
-             'mother_work' => 'nullable|string|max:255',
+            'gender' => ['required', Rule::in(['Male', 'Female', 'Other'])],
+            'birth_day' => 'required|date',
+            'location' => 'required|string|min:8', 
             'father_number' => 'nullable|string|max:255',
             'mother_number' => 'nullable|string|max:255',
-            'birth_day' => 'required|date',
-            'location' => 'required|string|min:8',     
+            'section_id' => 'required|integer|exists:sections,id',
+           
+            
+            
+                 
 
         ]); 
          $email = $request->email ;
@@ -66,13 +66,9 @@ class StudentController extends Controller
             'father_name' => $validated['father_name'],
             'mother_name' =>$validated['mother_name'],
             'location' =>  $validated['location'],
-            'stage_id' => $validated['stage_id'],
             'section_id' => $validated['section_id'],
-            'classroom_id' => $validated['classroom_id'],
-            'father_work' => $validated['father_work'],
-             'mother_work' => $validated['mother_work'],
-            'father_phone' => $validated['father_number'],
-            'mother_phone' => $validated['mother_number'],
+            'father_number' => $validated['father_number'],
+            'mother_number' => $validated['mother_number'],
             'birth_day' => $validated['birth_day'],   
         ]);
 
