@@ -8,6 +8,7 @@ use App\Models\Supervisor;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class SupervisorController extends Controller
 {
@@ -24,7 +25,10 @@ class SupervisorController extends Controller
             'last_name'  => 'required|string|max:150',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8',
+            'gender' => ['required', Rule::in(['Male', 'Female', 'Other'])],
             'phone' => 'required|string|min:10|max:20',
+            'birth_day' => 'required|date',
+            'location' => 'required|string|min:4',
         ]);
          $email = $request->email ;
         $password = $request->password ;
@@ -44,7 +48,10 @@ class SupervisorController extends Controller
         $supervisor = Supervisor::create([
             'user_id' => $user->id,
             'phone' => $validated['phone'],
-            'salary' => $validated['salary'],   
+            'gender' =>$validated['gender'],
+            'birth_day' => $validated['birth_day'],
+            'location' =>  $validated['location'],   
+
         ]);
 
 

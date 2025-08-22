@@ -9,7 +9,7 @@ use App\Http\Controllers\Api\V1\Dashboard\AuthController as DashboardAuthControl
 use App\Http\Controllers\Api\V1\Dashboard\HomeController as DashboardHomeController;
 use App\Http\Controllers\Api\V1\Dashboard\StudentController as DashboardStudentController;
 use App\Http\Controllers\Api\V1\Dashboard\StudentController;
-use App\Http\Controllers\Api\V1\Dashboard\TeacherController;
+use App\Http\Controllers\Api\V1\Dashboard\TeacherController ;
 use App\Http\Controllers\Api\V1\Dashboard\SupervisorController as  DashboardSupervisorController ;
 use App\Http\Controllers\Api\V1\Dashboard\SearchController as  DashboardSearchController ;
 use App\Http\Controllers\TeacherController  as DashboardTeacherController;
@@ -41,7 +41,7 @@ Route::group([
 
 Route::prefix('v1/dashboard')->middleware('auth:sanctum')->group(function () {
       Route::get('/home', [DashboardHomeController::class, 'index']);
-      Route::apiResource('/student', StudentController::class);
+      Route::apiResource('/student', DashboardStudentController::class);
       Route::apiResource('/teacher', TeacherController::class);
       Route::apiResource('/supervisor',  DashboardSupervisorController::class);
       Route::post('/search', [ DashboardSearchController::class, 'search']);

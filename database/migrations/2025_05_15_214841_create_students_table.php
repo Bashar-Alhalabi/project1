@@ -24,6 +24,8 @@ return new class extends Migration {
             $table->string('diseases')->nullable();
             $table->string('special_notes')->nullable();
             $table->foreignId('section_id')->constrained()->cascadeOnDelete();
+             $table->foreignId('classroom_id')->constrained()->cascadeOnDelete();
+              $table->foreignId('stage_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

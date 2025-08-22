@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateStudentRequest;
 use App\Http\Resources\StudentResource;
 use App\Models\Student;
 use App\Models\User;
+use App\Models\Section;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -33,15 +34,11 @@ class StudentController extends Controller
             'mother_name' => 'nullable|string|max:255',
             'gender' => ['required', Rule::in(['Male', 'Female', 'Other'])],
             'birth_day' => 'required|date',
-            'location' => 'required|string|min:8', 
+            'location' => 'required|string|min:4', 
             'father_number' => 'nullable|string|max:255',
             'mother_number' => 'nullable|string|max:255',
             'section_id' => 'required|integer|exists:sections,id',
-           
             
-            
-                 
-
         ]); 
          $email = $request->email ;
         $password = $request->password ;
@@ -56,9 +53,12 @@ class StudentController extends Controller
             'password'   => Hash::make($password),
             'role_id'    => 1,
         ]);
+         $section = Section::find($validated['section_id']);
+         $classroom = $section->classroom;
+         $classroom_id = $classroom->id;
+         $stage_id = $classroom->stage->id;
 
-
-        $student = Student::create([
+         $student = Student::create([
             'user_id' => $user->id,
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
@@ -69,7 +69,9 @@ class StudentController extends Controller
             'section_id' => $validated['section_id'],
             'father_number' => $validated['father_number'],
             'mother_number' => $validated['mother_number'],
-            'birth_day' => $validated['birth_day'],   
+            'birth_day' => $validated['birth_day'],
+            'classroom_id' => $classroom_id,
+            'stage_id' => $stage_id,
         ]);
 
 
