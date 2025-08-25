@@ -7,7 +7,7 @@ use App\Models\User;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class TeacherController extends Controller
 {
@@ -25,11 +25,11 @@ class TeacherController extends Controller
             'last_name' => 'required|string|max:100',
             'email' => 'required|email|min:5|max:255',
             'password' => 'required|min:8|max:255',
-            'phone' => 'required|string|min:10|max:20'
+            'phone' => 'required|string|min:10|max:20',
         ]);
 
          $email = $request->email ;
-        $password = $request->password ;
+         $password = $request->password ;
 
         DB::beginTransaction();
     try {

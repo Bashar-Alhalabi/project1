@@ -25,14 +25,14 @@ class SupervisorController extends Controller
             'last_name'  => 'required|string|max:150',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8',
-            'gender' => ['required', Rule::in(['Male', 'Female', 'Other'])],
             'phone' => 'required|string|min:10|max:20',
-            'birth_day' => 'required|date',
-            'location' => 'required|string|min:4',
+             'stage_id' => 'required|integer|exists:stages,id',
+               
+
         ]);
          $email = $request->email ;
-        $password = $request->password ;
-
+         $password = $request->password ;
+        
          DB::beginTransaction();
     try {
 
@@ -47,10 +47,8 @@ class SupervisorController extends Controller
 
         $supervisor = Supervisor::create([
             'user_id' => $user->id,
-            'phone' => $validated['phone'],
-            'gender' =>$validated['gender'],
-            'birth_day' => $validated['birth_day'],
-            'location' =>  $validated['location'],   
+            'phone' => $validated['phone'], 
+             'stage_id' =>$validated['stage_id']
 
         ]);
 
@@ -73,11 +71,11 @@ class SupervisorController extends Controller
 
         DB::rollBack();
 
-        \Log::error('Create student failed: '.$e->getMessage());
+        \Log::error('Create supervisor failed: '.$e->getMessage());
 
         return response()->json([
             'success' => false,
-            'message' => 'Failed to create student',
+            'message' => 'Failed to create supervisor',
             'error' => $e->getMessage(),
         ], 500);
     }

@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Models\Teacher;
-use App\Models\Employee;
+use App\Models\Supervisor;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 class HomeController extends Controller
@@ -14,7 +14,7 @@ class HomeController extends Controller
     {
         $totalStudents = Student::count();
         $totalTeachers = Teacher::count();
-        $totalEmployees = Employee::count();
+        $totalSupervisors = Supervisor::count();
 
         $genderCount = Student::selectRaw('gender, COUNT(*) as count')
                         ->groupBy('gender')
@@ -29,7 +29,7 @@ class HomeController extends Controller
         return response()->json([
             'total_students' => $totalStudents,
             'total_teachers' => $totalTeachers,
-            'total_employees' => $totalEmployees,
+            'total_supervisors' => $totalSupervisors,
             'gender_distribution' => [
                 'male' => $genderCount['male'] ,
                 'female' => $genderCount['female'] ,
